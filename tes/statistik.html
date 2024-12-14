@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistik Artikel</title>
+  <link rel="stylesheet" href="statistik.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js Library -->
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3>Dashboard</h3>
+      <ul>
+        <li><a href="profile.html">Profil Saya</a></li>
+        <li><a href="Tambah.html">Tambah Artikel</a></li>
+        <li><a href="edit_artikel.html">Edit Artikel</a></li>
+        <li><a href="statistik.html">Statistik</a></li>
+        <li><a href="artikel_saya.html">Artikel Saya</a></li>
+        <li><a href="hapus_artikel.html">Hapus Artikel</a></li>
+      </ul>
+      <a href="#" class="logout">Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h2>Statistik Artikel</h2>
+      <div class="chart-container">
+        <canvas id="statistikChart"></canvas>
+        <script src="statistik.js"></script>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
