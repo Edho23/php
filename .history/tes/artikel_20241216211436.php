@@ -53,7 +53,7 @@ $layout = $article['layout'];
         <div class="header-container">
             <div class="left-section">
                 <div class="logo">
-                    <a href="../beranda.php">
+                    <a href="beranda.php">
                         <img src="../gambar/LOGOO.png" alt="Logo">
                     </a>
                 </div>

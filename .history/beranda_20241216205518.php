@@ -65,13 +65,12 @@ try {
                     <div class="baris"></div>
                 </div>
                 <?php if ($loggedIn): ?>
-                    <div class="loginAkun-btn">
+
                         <a href="tes/profile.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil -->
                         <?php else: ?>
                         <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
                         <a href="pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
                         <?php endif; ?>
-                    </div>
             </div>
         </div>
     </header>
