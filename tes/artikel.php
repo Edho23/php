@@ -10,12 +10,32 @@ if (!isset($_GET['id'])) {
     die("Artikel tidak ditemukan.");
 }
 
-
 $articleId = $_GET['id'];
 
-// Tingkatkan jumlah views
-$stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = :id");
-$stmt->execute(['id' => $articleId]);
+// Cek apakah user sudah melihat artikel
+if ($loggedIn) {
+    $stmt = $conn->prepare("SELECT has_viewed FROM article_interactions WHERE article_id = :article_id AND user_id = :user_id");
+    $stmt->execute(['article_id' => $articleId, 'user_id' => $_SESSION['user_id']]);
+    $interaction = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$interaction) {
+        // Jika user belum melihat artikel, tambahkan interaksi baru dan tingkatkan views
+        $stmt = $conn->prepare("INSERT INTO article_interactions (article_id, user_id, has_viewed) VALUES (:article_id, :user_id, 1)");
+        $stmt->execute(['article_id' => $articleId, 'user_id' => $_SESSION['user_id']]);
+
+        // Tingkatkan jumlah views di artikel
+        $stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = :id");
+        $stmt->execute(['id' => $articleId]);
+    } elseif (!$interaction['has_viewed']) {
+        // Jika user ada di database tetapi belum melihat artikel, perbarui status
+        $stmt = $conn->prepare("UPDATE article_interactions SET has_viewed = 1 WHERE article_id = :article_id AND user_id = :user_id");
+        $stmt->execute(['article_id' => $articleId, 'user_id' => $_SESSION['user_id']]);
+
+        // Tingkatkan jumlah views di artikel
+        $stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = :id");
+        $stmt->execute(['id' => $articleId]);
+    }
+}
 
 // Query artikel berdasarkan ID
 $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");

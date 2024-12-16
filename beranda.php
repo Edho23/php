@@ -7,6 +7,10 @@ $username = $loggedIn ? $_SESSION['username'] : ''; // Mendapatkan username peng
 <?php
 require 'database.php'; // Koneksi database
 
+$stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = 'Bisnis' ORDER BY views DESC LIMIT 1");
+$stmt->execute();
+$article = $stmt->fetch(PDO::FETCH_ASSOC); // Ambil artikel utama
+
 try {
     // Query untuk mengambil semua artikel
     $stmt = $conn->prepare("SELECT * FROM articles ORDER BY tanggal DESC");
@@ -16,6 +20,20 @@ try {
     echo "Error: " . $e->getMessage();
     $articles = []; // Set ke array kosong jika terjadi error
 }
+
+function getTrendingArticles($conn, $kategori) {
+    $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE kategori = :kategori ORDER BY views DESC LIMIT 5");
+    $stmt->execute(['kategori' => $kategori]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Ambil artikel untuk setiap kategori
+$trendingBudaya = getTrendingArticles($conn, 'Budaya');
+$trendingBisnis = getTrendingArticles($conn, 'Bisnis');
+$trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
+$trendingKeuangan = getTrendingArticles($conn, 'Keuangan');
+$trendingInternasional = getTrendingArticles($conn, 'Internasional');
+
 
                     
 ?>
@@ -92,69 +110,128 @@ try {
     </div>
         <div class="konten">
             <div class="konten-1">
+            <div class="layout">
+    <div class="genre">
+        <a href="kategori.php?kategori=Bisnis"><b>BISNIS</b></a> <!-- Tautan menuju kategori -->
+    </div>
+    <div class="subjudul-konten">
+        <p class="judul-hotline">
+            <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b><?= htmlspecialchars($article['judul']); ?></b></a>
+        </p>
+        <div class="penulis-tgl">
+            <label for=""><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
+            <label for="">By <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+        </div>
+        <div class="ringkasan">
+            <p>
+                <?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...
+                <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b>SELENGKAPNYA</b></a>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="layout">
+    <img class="gambarHotline" src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="Bisnis">
+</div>
+
                 <div class="layout">
-                    <div class="genre">
-                        <a href="#"><b>BISNIS</b></a>
-                    </div>
-                    <div class="subjudul-konten">
-                        <p class="judul-hotline"><b>Lorem ipsum dolor sit  Quis accusamus eveniet natus?</b></p>
-                        <div class="penulis-tgl">
-                            <label for="">5 May 2024</label>
-                            <label for="">By <b>Beyazit</b></label>
-                        </div>
-                        <div class="ringkasan">
-                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Est saepe qui culpa rerum necessitatibus nostrum quos quidem reiciendis magni dicta. <b>SELENGKAPNYA</b></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="layout">
-                    <img class="gambarHotline" src="gambar/websiteplanet-dummy-820X500 (1).png" alt="Bisnis">
-                </div>
-                <div class="layout">
-                    <div class="trending-layout">
-                        <h3>#TRENDING</h3>
-                        <div class="trending-card">
-                            <div class="nomor-genre">
-                                <label for="">1 · </label>
-                                <label for="">Musik</label>
-                            </div>
-                            <a href="#">Lorem ipsum dolor sit amet consectetur.</a>
-                        </div>
-                        <div class="trending-card">
-                            <div class="nomor-genre">
-                                <label for="">2 · </label>
-                                <label for="">Bisnis</label>
-                            </div>
-                            <a href="#">Lorem ipsum dolor sit amet consectetur.</a>
-                        </div>
-                        <div class="trending-card">
-                            <div class="nomor-genre">
-                                <label for="">3 · </label>
-                                <label for="">Olahraga</label>
-                            </div>
-                            <a href="#">Lorem ipsum dolor sit amet consectetur.</a>
-                        </div>
-                        <div class="trending-card">
-                            <div class="nomor-genre">
-                                <label for="">4 · </label>
-                                <label for="">Musik</label>
-                            </div>
-                            <a href="#">Lorem ipsum dolor sit amet consectetur.</a>
-                        </div>
-                        <div class="trending-card">
-                            <div class="nomor-genre">
-                                <label for="">5 · </label>
-                                <label for="">Teknologi</label>
-                            </div>
-                            <a href="#">Lorem ipsum dolor sit amet consectetur.</a>
-                        </div>
-                        <div class="trending-card">
-                            <div class="semua-trending">
-                                <a href="#"><b>SEMUA TRENDING...</b></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="trending-layout">
+        <h3>#TRENDING</h3>
+
+        <!-- Trending Budaya -->
+        <div class="trending-card">
+            <div class="nomor-genre">
+                <label for="">1 · </label>
+                <label for="">Budaya</label>
+            </div>
+            <?php
+            $trendingBudaya = getTrendingArticles($conn, 'Budaya');
+            if ($trendingBudaya): ?>
+                <a href="tes/artikel.php?id=<?= $trendingBudaya[0]['id']; ?>">
+                    <?= htmlspecialchars($trendingBudaya[0]['judul']); ?>
+                </a>
+            <?php else: ?>
+                <a href="#">Tidak ada artikel trending</a>
+            <?php endif; ?>
+        </div>
+
+        <!-- Trending Bisnis -->
+        <div class="trending-card">
+            <div class="nomor-genre">
+                <label for="">2 · </label>
+                <label for="">Bisnis</label>
+            </div>
+            <?php
+            $trendingBisnis = getTrendingArticles($conn, 'Bisnis');
+            if ($trendingBisnis): ?>
+                <a href="tes/artikel.php?id=<?= $trendingBisnis[0]['id']; ?>">
+                    <?= htmlspecialchars($trendingBisnis[0]['judul']); ?>
+                </a>
+            <?php else: ?>
+                <a href="#">Tidak ada artikel trending</a>
+            <?php endif; ?>
+        </div>
+
+        <!-- Trending Olahraga -->
+        <div class="trending-card">
+            <div class="nomor-genre">
+                <label for="">3 · </label>
+                <label for="">Olahraga</label>
+            </div>
+            <?php
+            $trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
+            if ($trendingOlahraga): ?>
+                <a href="tes/artikel.php?id=<?= $trendingOlahraga[0]['id']; ?>">
+                    <?= htmlspecialchars($trendingOlahraga[0]['judul']); ?>
+                </a>
+            <?php else: ?>
+                <a href="#">Tidak ada artikel trending</a>
+            <?php endif; ?>
+        </div>
+
+        <!-- Trending Musik -->
+        <div class="trending-card">
+            <div class="nomor-genre">
+                <label for="">4 · </label>
+                <label for="">Keuangan</label>
+            </div>
+            <?php
+            $trendingKeuangan = getTrendingArticles($conn, 'Keuangan');
+            if ($trendingKeuangan): ?>
+                <a href="tes/artikel.php?id=<?= $trendingKeuangan[0]['id']; ?>">
+                    <?= htmlspecialchars($trendingKeuangan[0]['judul']); ?>
+                </a>
+            <?php else: ?>
+                <a href="#">Tidak ada artikel trending</a>
+            <?php endif; ?>
+        </div>
+
+        <!-- Trending Teknologi -->
+        <div class="trending-card">
+            <div class="nomor-genre">
+                <label for="">5 · </label>
+                <label for="">Internasional</label>
+            </div>
+            <?php
+            $trendingInternasional = getTrendingArticles($conn, 'Internasional');
+            if ($trendingInternasional): ?>
+                <a href="tes/artikel.php?id=<?= $trendingInternasional[0]['id']; ?>">
+                    <?= htmlspecialchars($trendingInternasional[0]['judul']); ?>
+                </a>
+            <?php else: ?>
+                <a href="#">Tidak ada artikel trending</a>
+            <?php endif; ?>
+        </div>
+
+        <!-- Link Semua Trending -->
+        <div class="trending-card">
+            <div class="semua-trending">
+                <a href="semua_trending.php"><b>SEMUA TRENDING...</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+
             </div>
             <div class="konten-2">
                          <?php foreach ($articles as $article): ?>

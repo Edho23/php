@@ -1,24 +1,23 @@
 $(document).ready(function () {
-  $('#like-button').click(function (e) {
-      e.preventDefault(); // Mencegah reload halaman
+    $('#like-button').click(function (e) {
+        e.preventDefault();
 
-      const articleId = $(this).data('id'); // Ambil ID artikel dari atribut data-id
+        const articleId = $(this).data('id');
 
-      $.ajax({
-          url: 'like_artikel_ajax.php', // Endpoint PHP untuk memproses like
-          method: 'POST',
-          data: { id: articleId },
-          success: function (response) {
-              if (response.success) {
-                  // Perbarui jumlah likes di halaman
-                  $('#like-count').text(response.likes);
-              } else {
-                  alert('Gagal menambahkan like: ' + response.message);
-              }
-          },
-          error: function () {
-              alert('Terjadi kesalahan. Silakan coba lagi.');
-          }
-      });
-  });
+        $.ajax({
+            url: 'like_artikel_ajax.php',
+            method: 'POST',
+            data: { id: articleId },
+            success: function (response) {
+                if (response.success) {
+                    $('#like-count').text(response.likes);
+                } else {
+                    alert(response.message); // Tampilkan pesan kesalahan
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Terjadi kesalahan: ' + xhr.status + ' - ' + error);
+            }
+        });
+    });
 });
