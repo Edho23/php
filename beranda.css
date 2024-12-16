@@ -119,8 +119,7 @@ header #login-btn:active,
   display: none;
 }
 
-/* main style */
-
+/* main style awal */
 .judul-dan-cari {
   display: flex;
   justify-content: space-between;
