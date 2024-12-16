@@ -53,7 +53,7 @@ $layout = $article['layout'];
         <div class="header-container">
             <div class="left-section">
                 <div class="logo">
-                    <a href="../beranda.php">
+                    <a href="beranda.php">
                         <img src="../gambar/LOGOO.png" alt="Logo">
                     </a>
                 </div>
@@ -107,7 +107,7 @@ $layout = $article['layout'];
             <div class="content">
                 <?php if ($layout === 'layout1'): ?>
                     <div class="layout" id="layout1">
-                        <img src="<?= htmlspecialchars($article['gambar']); ?>" alt="Gambar" class="gambar-sampul">
+                        <img src="asset<?= htmlspecialchars($article['gambar']); ?>" alt="Gambar" class="gambar-sampul">
                         <p class="subjudul-isi"><?= nl2br(htmlspecialchars($article['konten'])); ?></p>
                         <p><?= nl2br(htmlspecialchars($article['isi_artikel'])); ?></p>
                     </div>

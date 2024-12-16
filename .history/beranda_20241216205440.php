@@ -28,13 +28,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>360NEWS</title>
     <link rel="stylesheet" href="beranda.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wdth,wght@75,700&family=Public+Sans:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
     <header>
@@ -59,19 +52,18 @@ try {
                 </nav>
             </div>
             <div class="kanan-nav">
-                <div class="ikon-menu" id="menuToggle">
+            <div class="ikon-menu" id="menuToggle">
                     <div class="baris"></div>
                     <div class="baris"></div>
                     <div class="baris"></div>
                 </div>
                 <?php if ($loggedIn): ?>
-                    <div class="loginAkun-btn">
-                        <a href="tes/profile.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil -->
-                        <?php else: ?>
-                        <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
-                        <a href="pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
-                        <?php endif; ?>
-                    </div>
+                    
+                    <a href="tes/profile.php"><button id="profile-btn">Profil Saya</button></a> <!-- Tautan ke profil -->
+                <?php else: ?>
+                    <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
+                    <a href="daftar.php"><button>DAFTAR</button></a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -159,17 +151,18 @@ try {
             <div class="konten-2">
                          <?php foreach ($articles as $article): ?>
                 <div class="panel">
-                    <a href="tes/artikel.php?id=<?= $article['id']; ?>">
-                        <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article['judul']); ?>">
-                    </a>
-                    <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
-                        <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
-                    </a>
-                    <p class="ringkasan-konten-2"><?= htmlspecialchars($article['konten']); ?></p>
-                    <div class="penulis-tgl-konten">
-                        <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-                        <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                    <div class="content">
+                    <!-- Tambahkan tautan pada judul -->
+                            <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
+                         <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
+                            </a>
+                            <p class="ringkasan-konten-2"><?= htmlspecialchars($article['konten']); ?></p>
                     </div>
+                        <div class="penulis-tgl-konten">
+                            <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
+                            <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+                        </div>
                 </div>
                  <?php endforeach; ?>
             </div>
