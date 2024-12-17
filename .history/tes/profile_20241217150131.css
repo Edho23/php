@@ -151,7 +151,7 @@ body {
   margin-right: 15px;
   padding: 10px 15px;
   background-color: #f9f9f9;
-  border: 1px solid blue;
+  border: 1px solid #005792;
   color: blue;
   border-radius: 50px;
 }
@@ -171,7 +171,6 @@ body {
   color: white;
   border: #FD5F00;
   margin-bottom: 51.5px;
-  cursor: pointer;
 }
 
 .like-view-card {

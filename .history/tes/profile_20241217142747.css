@@ -100,11 +100,7 @@ body {
 
 .tampilan-flex {
   display: flex;
-  margin: 50px auto;
-  border: 1px solid #FD5F00;
-  padding: 15px;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 50px 20px;
 }
 
 .tampilan-flex .profile-nama {
@@ -157,37 +153,8 @@ body {
 }
 
 .edit-like-view button {
-  background-color: white;
+  background-color: #ddd;
   color: #FD5F00;
   border: 1px solid #FD5F00;
-  border-radius: 50px;
-  padding: 8px 15px;
-  margin-bottom: 50px;
-  margin-left: 20px;
-}
-
-.edit-like-view button:hover {
-  background-color: #FD5F00;
-  color: white;
-  border: #FD5F00;
-  margin-bottom: 51.5px;
-  cursor: pointer;
-}
-
-.like-view-card {
-  display: flex;
-}
-
-.like-view {
-  margin-right: 30px;
-  text-align: center;
-}
-
-.like-view-card .like-view .jumlah {
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.like-view-card .like-view .keterangan {
-  color: grey;
+  padding: ;
 }
