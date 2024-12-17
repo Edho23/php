@@ -85,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tambah Artikel Baru</title>
   <link rel="stylesheet" href="Tambah.css">
-  
   <script>
     document.addEventListener('DOMContentLoaded', function () {
         const layoutSelect = document.getElementById('layout');

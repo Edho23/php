@@ -85,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tambah Artikel Baru</title>
   <link rel="stylesheet" href="Tambah.css">
-  
   <script>
     document.addEventListener('DOMContentLoaded', function () {
         const layoutSelect = document.getElementById('layout');
@@ -105,9 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
-    <div class="kembali-btn">
-        <a href="../beranda.php"><button>Kembali</button></a>
-      </div>
       <h3>Dashboard</h3>
       <ul>
         <?php if ($_SESSION['role'] === 'admin'): ?>
@@ -121,11 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li><a href="edit_artikel.php">Edit Artikel</a></li>
         <?php elseif ($_SESSION['role'] === 'penulis'): ?>
         <!-- Menu untuk penulis -->
-        <li><a id="profil" href="Profile.php">Profile</a></li>
-        <li><a id="tambahArtikel" href="Tambah.php">Tambah Artikel</a></li>
-        <li><a id="editArtikel" href="edit_artikel.php">Edit Artikel</a></li>
-        <li><a id="artikelSaya" href="artikel_saya.php">Artikel Saya</a></li>
-        <li><a id="hapusArtikel" href="hapus_artikel.php">Hapus Artikel</a></li>
+        <li><a href="Profile.php">Profile</a></li>
+        <li><a href="Tambah.php">Tambah Artikel</a></li>
+        <li><a href="edit_artikel.php">Edit Artikel</a></li>
+        <li><a href="artikel_saya.php">Artikel Saya</a></li>
+        <li><a href="hapus_artikel.php">Hapus Artikel</a></li>
         <?php endif; ?>
       </ul>
       <a href="logout.php" class="logout">Logout</a>
@@ -170,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <label for="image">Gambar Sampul</label>
           <input type="file" id="image" name="image" accept="image/*" required>
         </div>
-        <div class="form-group-optional-images" id="extra-images" style="display: none;">
+        <div class="form-group optional-images" id="extra-images" style="display: none;">
           <label for="gambar2">Gambar Tambahan (Opsional untuk Layout 2 & 3)</label>
           <input type="file" id="gambar2" name="gambar2" accept="image/*">
           <input type="file" id="gambar3" name="gambar3" accept="image/*">

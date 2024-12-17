@@ -4,7 +4,6 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     display: flex;
-    box-sizing: border-box;
   }
   
   .container {
@@ -16,8 +15,8 @@ body {
   /* Sidebar */
   .sidebar {
     background-color: #FD5F00;
-    width: 210px;
-    height: 100vh;
+    width: 250px;
+    height: 550px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -43,8 +42,7 @@ body {
   
   .sidebar h3 {
     font-size: 1.2em;
-    margin-bottom: 30px;
-    margin-top: 50px;
+    margin-bottom: 20px;
   }
   
   .sidebar ul {
@@ -59,16 +57,11 @@ body {
   
   .sidebar ul li a {
     text-decoration: none;
-    color: black;
+    color: #333;
     font-size: 1em;
     padding: 5px;
     display: block;
     transition: background-color 0.3s ease;
-  }
-  
-  .sidebar ul li #tambahArtikel {
-    background-color: #ddd;
-    border-radius: 4px;
   }
   
   .sidebar ul li a:hover {
@@ -77,28 +70,22 @@ body {
   }
   
   .logout {
-  width: 55px;
-  margin-top: auto;
-  margin-bottom: 20%;
-  color: red;
-  background-color: white;
-  font-weight: bold;
-  text-decoration: none;
-  padding: 5px 10px;
-  display: inline-block;
-  border-radius: 10px;
-  text-align: end;
+    margin-top: auto;
+    color: red;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px;
+    display: inline-block;
   }
   
   .logout:hover {
     background-color: #fdd;
-    border-radius: 10px;
+    border-radius: 4px;
   }
   
-
   /* Main Content */
   .main-content {
-    margin-left: 250px;
+    margin-left: 300px;
     flex-grow: 1;
     padding: 40px;
   }

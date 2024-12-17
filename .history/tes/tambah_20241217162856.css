@@ -17,7 +17,7 @@ body {
   .sidebar {
     background-color: #FD5F00;
     width: 210px;
-    height: 100vh;
+    height: 95vh;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -79,7 +79,6 @@ body {
   .logout {
   width: 55px;
   margin-top: auto;
-  margin-bottom: 20%;
   color: red;
   background-color: white;
   font-weight: bold;
@@ -87,7 +86,7 @@ body {
   padding: 5px 10px;
   display: inline-block;
   border-radius: 10px;
-  text-align: end;
+  margin-bottom: 15px;
   }
   
   .logout:hover {
@@ -95,6 +94,10 @@ body {
     border-radius: 10px;
   }
   
+  
+.container .main-content {
+  width: 50%;
+}
 
   /* Main Content */
   .main-content {
