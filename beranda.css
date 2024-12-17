@@ -314,23 +314,37 @@ main h1 b {
 }
 
 .konten-2 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 20px;
-  margin: 50px 25px;
+  display: flex; /* Mengatur item secara horizontal */
+  flex-wrap: nowrap; /* Mencegah artikel turun ke bawah */
+  margin: 0 10px;
+  gap: 20px; /* Jarak antar panel */
+  overflow-x: auto; /* Membuat scroll horizontal */
+  padding: 30px 20PX; /* Padding untuk memberi ruang di dalam kontainer */
+  scroll-behavior: smooth; /* Efek scroll halus */
+  background-color: #f9f9f9; /* Opsional: Latar belakang konten */
 }
 
 .panel {
-  background-color: #f8f8f8;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  flex: 0 0 auto; /* Ukuran panel tetap, tidak menyusut atau membesar */
+  width: 440px; /* Lebar tetap untuk setiap artikel */
+  border: 1px solid #ddd; /* Border ringan */
+  border-radius: 8px; /* Sudut membulat */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bayangan panel */
+  background-color: #fff; /* Latar belakang putih */
+  overflow: hidden; /* Hindari konten keluar dari panel */
 }
+
 
 .panel:hover {
   transform: translateY(-10px) scale(1.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+}
+
+#gambar-konten2 {
+  width: 100%; /* Gambar memenuhi lebar panel */
+  height: 180px; /* Tinggi gambar tetap */
+  object-fit: cover; /* Menjaga proporsi gambar */
 }
 
 .panel .subjudul-konten-2:hover {
