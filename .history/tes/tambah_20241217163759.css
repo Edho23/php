@@ -17,6 +17,7 @@ body {
   .sidebar {
     background-color: #FD5F00;
     width: 210px;
+    margin-left: -180px;
     height: 100vh;
     padding: 20px;
     display: flex;
@@ -79,7 +80,6 @@ body {
   .logout {
   width: 55px;
   margin-top: auto;
-  margin-bottom: 20%;
   color: red;
   background-color: white;
   font-weight: bold;
@@ -95,10 +95,12 @@ body {
     border-radius: 10px;
   }
   
+  
+.container .main-content {
+}
 
   /* Main Content */
   .main-content {
-    margin-left: 250px;
     flex-grow: 1;
     padding: 40px;
   }

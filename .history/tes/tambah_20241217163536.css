@@ -79,7 +79,6 @@ body {
   .logout {
   width: 55px;
   margin-top: auto;
-  margin-bottom: 20%;
   color: red;
   background-color: white;
   font-weight: bold;
@@ -95,6 +94,10 @@ body {
     border-radius: 10px;
   }
   
+  
+.container .main-content {
+  width: 50%;
+}
 
   /* Main Content */
   .main-content {

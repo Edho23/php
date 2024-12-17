@@ -16,8 +16,8 @@ body {
   /* Sidebar */
   .sidebar {
     background-color: #FD5F00;
-    width: 210px;
-    height: 100vh;
+    width: 20%;
+    height: 550px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -77,17 +77,15 @@ body {
   }
   
   .logout {
-  width: 55px;
-  margin-top: auto;
-  margin-bottom: 20%;
-  color: red;
-  background-color: white;
-  font-weight: bold;
-  text-decoration: none;
-  padding: 5px 10px;
-  display: inline-block;
-  border-radius: 10px;
-  text-align: end;
+    width: 75px;
+    margin-top: auto;
+    color: red;
+    background-color: white;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 10px;
   }
   
   .logout:hover {
@@ -95,10 +93,14 @@ body {
     border-radius: 10px;
   }
   
+  
+.container .main-content {
+  width: 50%;
+}
 
   /* Main Content */
   .main-content {
-    margin-left: 250px;
+    margin-right: 250px;
     flex-grow: 1;
     padding: 40px;
   }
