@@ -23,7 +23,7 @@ $stmt = $conn->prepare("
     FROM articles 
     WHERE author_id = :user_id
 ");
-$stmt->execute(['user_id' => $userId]);
+$stmt->execute(['user_id' => $user_Id]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Set nilai total views dan likes
@@ -90,15 +90,13 @@ $totalLikes = $result['total_likes'] ?? 0;
       </div>
       <div class="edit-like-view">
         <button>EDIT PROFIL</button>
-        <div class="like-view-card">
         <div class="like-view">
-          <p class="jumlah" id="jumlah-like"><?= $totalLikes; ?></p>
+          <p class="jumlah" id="jumlah-like"><?= $totalViews; ?></p>
           <p class="keterangan" id="keterangan-like">LIKE</p>
         </div>
         <div class="like-view">
-          <p class="jumlah" id="jumlah-view"><?= $totalViews; ?></p>
+          <p class="jumlah" id="jumlah-view">250</p>
           <p class="keterangan" id="keterangan-view">VIEWERS</p>
-        </div>
         </div>
       </div>
     </div>

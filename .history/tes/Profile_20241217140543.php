@@ -7,7 +7,6 @@ if (!isset($_SESSION['user_id'])) {
 
 require '../database.php'; // Jalur diperbarui untuk mengakses database.php dari folder tes
 
-$userId = $_SESSION['user_id'];
 // Ambil data pengguna dari database berdasarkan sesi
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
 $stmt->execute(['id' => $_SESSION['user_id']]);
@@ -17,19 +16,6 @@ if (!$user) {
     echo "Pengguna tidak ditemukan.";
     exit;
 }
-
-$stmt = $conn->prepare("
-    SELECT SUM(views) AS total_views, SUM(likes) AS total_likes 
-    FROM articles 
-    WHERE author_id = :user_id
-");
-$stmt->execute(['user_id' => $userId]);
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Set nilai total views dan likes
-$totalViews = $result['total_views'] ?? 0;
-$totalLikes = $result['total_likes'] ?? 0;
-
 ?>
 
 <!DOCTYPE html>
@@ -77,28 +63,14 @@ $totalLikes = $result['total_likes'] ?? 0;
         <img src="../gambar/rb_2150611765.png" alt="">
       </div>
       <div class="profile-nama">
-        <p class="nama-lengkap"><?php echo htmlspecialchars($user['nama_lengkap']);?></p>
+        <p class="nama"><?php echo htmlspecialchars($user['nama_lengkap']);?></p>
         <div class="penulis-role">
           <p><?php echo htmlspecialchars($user['role']);?></p>
-          <p class="char-pemisah">|</p>
           <p><?php echo $user['jenis_kelamin'] == 'L' ? 'Laki-laki': 'Perempuan';?></p>
         </div>
         <div class="email-nohp">
           <p><?php echo htmlspecialchars($user['nomor_hp']);?></p>
           <p><?php echo htmlspecialchars($user['email']);?></p>
-        </div>
-      </div>
-      <div class="edit-like-view">
-        <button>EDIT PROFIL</button>
-        <div class="like-view-card">
-        <div class="like-view">
-          <p class="jumlah" id="jumlah-like"><?= $totalLikes; ?></p>
-          <p class="keterangan" id="keterangan-like">LIKE</p>
-        </div>
-        <div class="like-view">
-          <p class="jumlah" id="jumlah-view"><?= $totalViews; ?></p>
-          <p class="keterangan" id="keterangan-view">VIEWERS</p>
-        </div>
         </div>
       </div>
     </div>

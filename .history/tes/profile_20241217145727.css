@@ -161,17 +161,13 @@ body {
   color: #FD5F00;
   border: 1px solid #FD5F00;
   border-radius: 50px;
-  padding: 8px 15px;
+  padding: 5px 15px;
   margin-bottom: 50px;
   margin-left: 20px;
 }
 
 .edit-like-view button:hover {
-  background-color: #FD5F00;
-  color: white;
-  border: #FD5F00;
-  margin-bottom: 51.5px;
-  cursor: pointer;
+  
 }
 
 .like-view-card {

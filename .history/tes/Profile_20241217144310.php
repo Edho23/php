@@ -99,7 +99,7 @@ $totalLikes = $result['total_likes'] ?? 0;
           <p class="jumlah" id="jumlah-view"><?= $totalViews; ?></p>
           <p class="keterangan" id="keterangan-view">VIEWERS</p>
         </div>
-        </div>
+        
       </div>
     </div>
     
