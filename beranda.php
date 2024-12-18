@@ -33,11 +33,7 @@ $trendingBisnis = getTrendingArticles($conn, 'Bisnis');
 $trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
 $trendingKeuangan = getTrendingArticles($conn, 'Keuangan');
 $trendingInternasional = getTrendingArticles($conn, 'Internasional');
-
-
-                    
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -110,26 +106,26 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
     </div>
         <div class="konten">
             <div class="konten-1">
-            <div class="layout">
-    <div class="genre">
-        <a href="kategori.php?kategori=Bisnis"><b>BISNIS</b></a> <!-- Tautan menuju kategori -->
-    </div>
-    <div class="subjudul-konten">
-        <p class="judul-hotline">
-            <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b><?= htmlspecialchars($article['judul']); ?></b></a>
-        </p>
-        <div class="penulis-tgl">
-            <label for=""><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-            <label for="">By <b><?= htmlspecialchars($article['penulis']); ?></b></label>
-        </div>
-        <div class="ringkasan">
-            <p>
+                <div class="layout">
+                    <div class="genre">
+                        <a href="kategori.php?kategori=Bisnis"><b>BISNIS</b></a> <!-- Tautan menuju kategori -->
+                    </div>
+             <div class="subjudul-konten">
+                    <p class="judul-hotline">
+                    <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b><?= htmlspecialchars($article['judul']); ?></b></a>
+                    </p>
+                 <div class="penulis-tgl">
+                    <label for=""><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
+                    <label for="">By <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+            </div>
+         <div class="ringkasan">
+                <p>
                 <?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...
                 <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b>SELENGKAPNYA</b></a>
-            </p>
+                </p>
+            </div>
         </div>
     </div>
-</div>
 <div class="layout">
     <img class="gambarHotline" src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="Bisnis">
 </div>

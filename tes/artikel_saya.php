@@ -67,7 +67,6 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($article['tanggal']); ?></td>
                 <td><?= htmlspecialchars($article['views']); ?></td>
                 <td><?= htmlspecialchars($article['likes']); ?></td>
-                <a href="detail_artikel.php?id=<?= $article['id']; ?>">Lihat</a>
               </tr>
             <?php endforeach; ?>
           </tbody>

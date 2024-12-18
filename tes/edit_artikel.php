@@ -106,11 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($_SESSION['role'] === 'admin'): ?>
         <!-- Menu untuk admin -->
         <li><a href="admin.php">Profil</a></li>
-        <li><a href="verifikasi.php">Verifikasi Artikel</a></li>
+        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
         <li><a href="hapus_artikel.php">Hapus Artikel</a></li>
         <li><a href="daftar_akun.php">Daftar Akun</a></li>
         <li><a href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a href="artikel_baru.php">Artikel Baru</a></li>
+        <li><a href="Tambah.php">Artikel Baru</a></li>
         <li><a href="edit_artikel.php">Edit Artikel</a></li>
         <?php elseif ($_SESSION['role'] === 'penulis'): ?>
         <!-- Menu untuk penulis -->

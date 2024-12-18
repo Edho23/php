@@ -52,11 +52,11 @@ $totalLikes = $result['total_likes'] ?? 0;
         <?php if ($_SESSION['role'] === 'admin'): ?>
         <!-- Menu untuk admin -->
         <li><a id="profil" href="admin.php">Profil</a></li>
-        <li><a id="verifikasiArtikel" href="verifikasi.php">Verifikasi Artikel</a></li>
+        <li><a id="verifikasiArtikel" href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
         <li><a id="hapusArtikel" href="hapus_artikel.php">Hapus Artikel</a></li>
         <li><a id="daftarAkun" href="daftar_akun.php">Daftar Akun</a></li>
         <li><a id="formulirPenulis" href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a id="artikelBaru" href="artikel_baru.php">Artikel Baru</a></li>
+        <li><a id="artikelBaru" href="Tambah.php">Artikel Baru</a></li>
         <li><a id="editArtikel" href="edit_artikel.php">Edit Artikel</a></li>
         <?php elseif ($_SESSION['role'] === 'penulis'): ?>
         <!-- Menu untuk penulis -->
