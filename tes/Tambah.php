@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
     die("Akses ditolak. Harap login terlebih dahulu.");
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $category = $_POST['category'];
@@ -31,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['image']['name'])) {
         $imagePath = $targetDir . basename($_FILES['image']['name']);
         if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-            die("Gagal mengunggah gambar sampul. Pastikan folder 'uploads' tersedia dan dapat ditulis.");
+            die("Gagal mengunggah gambar sampul.");
         }
     } else {
         die("Gambar sampul wajib diunggah.");
@@ -54,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Simpan artikel ke database
-    $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout) 
-                            VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout)");
+    $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout, is_verified) 
+                            VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout, :is_verified)");
     $stmt->execute([
         'kategori' => $category,
         'judul' => $title,
@@ -65,12 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'gambar2' => $extraImage1,
         'gambar3' => $extraImage2,
         'tanggal' => date('Y-m-d'),
-        'penulis' => $_SESSION['username'] ?? 'Admin',
+        'penulis' => $_SESSION['username'] ?? 'Penulis',
         'author_id' => $_SESSION['user_id'] ?? null,
-        'layout' => $layout
+        'layout' => $layout,
+        'is_verified' => 0 // Artikel belum diverifikasi
     ]);
 
-    echo "<script>alert('Artikel berhasil ditambahkan!'); window.location.href='Tambah.php';</script>";
+    echo "<script>alert('Artikel berhasil ditambahkan dan menunggu verifikasi admin.'); window.location.href='Tambah.php';</script>";
 }
 ?>
 

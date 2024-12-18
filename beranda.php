@@ -2,18 +2,42 @@
 session_start(); // Memulai session
 $loggedIn = isset($_SESSION['user_id']); // Mengecek apakah pengguna sudah login
 $username = $loggedIn ? $_SESSION['username'] : ''; // Mendapatkan username pengguna yang login
-?>
 
-<?php
 require 'database.php'; // Koneksi database
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = 'Bisnis' ORDER BY views DESC LIMIT 1");
+// Query untuk konten-1
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+$stmt->execute();
+$konten1Article = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Query untuk konten-2
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC");
+$stmt->execute();
+$konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Query untuk konten-editor-pick
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'editor_pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+$stmt->execute();
+$editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Query untuk story-war
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'story_war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+$stmt->execute();
+$storyWarArticle = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Query untuk semua-class
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua_class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
+$stmt->execute();
+$semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = 'Bisnis' AND is_verified = 1 ORDER BY views DESC LIMIT 1");
 $stmt->execute();
 $article = $stmt->fetch(PDO::FETCH_ASSOC); // Ambil artikel utama
 
 try {
     // Query untuk mengambil semua artikel
-    $stmt = $conn->prepare("SELECT * FROM articles ORDER BY tanggal DESC");
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE is_verified = 1 ORDER BY tanggal DESC");
     $stmt->execute();
     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC); // Ambil semua data sebagai array asosiatif
 } catch (PDOException $e) {
@@ -22,8 +46,26 @@ try {
 }
 
 function getTrendingArticles($conn, $kategori) {
-    $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE kategori = :kategori ORDER BY views DESC LIMIT 5");
+    $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE kategori = :kategori AND is_verified = 1 ORDER BY views DESC LIMIT 5");
     $stmt->execute(['kategori' => $kategori]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getEditorPickArticles($conn) {
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE is_verified = 1 AND kategori IN ('Budaya', 'Teknologi') ORDER BY views DESC LIMIT 3");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getStoryWarArticle($conn) {
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = 'Otomotif' AND is_verified = 1 ORDER BY views DESC LIMIT 1");
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getAllClassArticles($conn) {
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE is_verified = 1 ORDER BY views DESC LIMIT 8");
+    $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -33,6 +75,9 @@ $trendingBisnis = getTrendingArticles($conn, 'Bisnis');
 $trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
 $trendingKeuangan = getTrendingArticles($conn, 'Keuangan');
 $trendingInternasional = getTrendingArticles($conn, 'Internasional');
+$editorPickArticles = getEditorPickArticles($conn);
+$storyWarArticle = getStoryWarArticle($conn);
+$allClassArticles = getAllClassArticles($conn);
 ?>
 
 <!DOCTYPE html>
@@ -113,84 +158,82 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
     </div>
         <div class="konten">
             <div class="konten-1">
-                <div class="layout">
-                    <div class="genre">
-                        <a href="kategori.php?kategori=Bisnis"><b>BISNIS</b></a> <!-- Tautan menuju kategori -->
-                    </div>
-             <div class="subjudul-konten">
-                    <p class="judul-hotline">
-                    <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b><?= htmlspecialchars($article['judul']); ?></b></a>
-                    </p>
-                 <div class="penulis-tgl">
-                    <label for=""><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-                    <label for="">By <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+            <?php if ($konten1Article): ?>
+    <div class="layout">
+        <div class="genre">
+            <a href="kategori.php?kategori=<?= htmlspecialchars($konten1Article['kategori']); ?>"><b><?= htmlspecialchars($konten1Article['kategori']); ?></b></a>
+        </div>
+        <div class="subjudul-konten">
+            <p class="judul-hotline">
+                <a href="tes/artikel.php?id=<?= htmlspecialchars($konten1Article['id']); ?>"><b><?= htmlspecialchars($konten1Article['judul']); ?></b></a>
+            </p>
+            <div class="penulis-tgl">
+                <label for=""><?= date('d M Y', strtotime($konten1Article['tanggal'])); ?></label>
+                <label for="">By <b><?= htmlspecialchars($konten1Article['penulis']); ?></b></label>
             </div>
-         <div class="ringkasan">
-                <p>
-                <?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...
-                <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b>SELENGKAPNYA</b></a>
+            <div class="ringkasan">
+                <p><?= htmlspecialchars(substr($konten1Article['konten'], 0, 150)); ?>...
+                    <a href="tes/artikel.php?id=<?= htmlspecialchars($konten1Article['id']); ?>"><b>SELENGKAPNYA</b></a>
                 </p>
             </div>
         </div>
     </div>
+<?php endif; ?>
 <div class="layout">
     <img class="gambarHotline" src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="Bisnis">
 </div>
 
-                <div class="layout">
-    <div class="trending-layout">
-        <h3>#TRENDING</h3>
+    <div class="layout">
+        <div class="trending-layout">
+            <h3>#TRENDING</h3>
 
-        <!-- Trending Budaya -->
-        <div class="trending-card">
-            <div class="nomor-genre">
-                <label for="">1 · </label>
-                <label for="">Budaya</label>
+            <!-- Trending Budaya -->
+            <div class="trending-card">
+                <div class="nomor-genre">
+                    <label for="">1 · </label>
+                    <label for="">Budaya</label>
+                </div>
+                <?php $trendingBudaya = getTrendingArticles($conn, 'Budaya');
+                    if ($trendingBudaya): ?>
+                        <a href="tes/artikel.php?id=<?= $trendingBudaya[0]['id']; ?>">
+                        <?= htmlspecialchars($trendingBudaya[0]['judul']); ?>
+                    </a>
+                <?php else: ?>
+                    <a href="#">Tidak ada artikel trending</a>
+                <?php endif; ?>
             </div>
-            <?php
-            $trendingBudaya = getTrendingArticles($conn, 'Budaya');
-            if ($trendingBudaya): ?>
-                <a href="tes/artikel.php?id=<?= $trendingBudaya[0]['id']; ?>">
-                    <?= htmlspecialchars($trendingBudaya[0]['judul']); ?>
-                </a>
-            <?php else: ?>
-                <a href="#">Tidak ada artikel trending</a>
-            <?php endif; ?>
-        </div>
 
-        <!-- Trending Bisnis -->
-        <div class="trending-card">
-            <div class="nomor-genre">
-                <label for="">2 · </label>
-                <label for="">Bisnis</label>
+            <!-- Trending Bisnis -->
+            <div class="trending-card">
+                <div class="nomor-genre">
+                    <label for="">2 · </label>
+                    <label for="">Bisnis</label>
+                </div>
+                <?php $trendingBisnis = getTrendingArticles($conn, 'Bisnis');
+                    if ($trendingBisnis): ?>
+                        <a href="tes/artikel.php?id=<?= $trendingBisnis[0]['id']; ?>">
+                        <?= htmlspecialchars($trendingBisnis[0]['judul']); ?>
+                        </a>
+                <?php else: ?>
+                    <a href="#">Tidak ada artikel trending</a>
+                <?php endif; ?>
             </div>
-            <?php
-            $trendingBisnis = getTrendingArticles($conn, 'Bisnis');
-            if ($trendingBisnis): ?>
-                <a href="tes/artikel.php?id=<?= $trendingBisnis[0]['id']; ?>">
-                    <?= htmlspecialchars($trendingBisnis[0]['judul']); ?>
-                </a>
-            <?php else: ?>
-                <a href="#">Tidak ada artikel trending</a>
-            <?php endif; ?>
-        </div>
 
-        <!-- Trending Olahraga -->
-        <div class="trending-card">
-            <div class="nomor-genre">
-                <label for="">3 · </label>
-                <label for="">Olahraga</label>
-            </div>
-            <?php
-            $trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
-            if ($trendingOlahraga): ?>
-                <a href="tes/artikel.php?id=<?= $trendingOlahraga[0]['id']; ?>">
+            <!-- Trending Olahraga -->
+            <div class="trending-card">
+                <div class="nomor-genre">
+                    <label for="">3 · </label>
+                    <label for="">Olahraga</label>
+                </div>
+                <?php $trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
+                    if ($trendingOlahraga): ?>
+                    <a href="tes/artikel.php?id=<?= $trendingOlahraga[0]['id']; ?>">
                     <?= htmlspecialchars($trendingOlahraga[0]['judul']); ?>
-                </a>
-            <?php else: ?>
-                <a href="#">Tidak ada artikel trending</a>
-            <?php endif; ?>
-        </div>
+                    </a>
+                <?php else: ?>
+                    <a href="#">Tidak ada artikel trending</a>
+                <?php endif; ?>
+            </div>
 
         <!-- Trending Musik -->
         <div class="trending-card">
@@ -237,146 +280,74 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 
             </div>
             <div class="konten-2">
-                         <?php foreach ($articles as $article): ?>
-                <div class="panel">
-                    <a href="tes/artikel.php?id=<?= $article['id']; ?>">
-                        <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article['judul']); ?>">
-                    </a>
-                    <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
-                        <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
-                    </a>
-                    <p class="ringkasan-konten-2"><?= htmlspecialchars($article['konten']); ?></p>
-                    <div class="penulis-tgl-konten">
-                        <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-                        <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+                <?php foreach ($konten2Articles as $article): ?>
+                    <div class="panel">
+                         <a href="tes/artikel.php?id=<?= $article['id']; ?>">
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article['judul']); ?>">
+                        </a>
+                            <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
+                                <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
+                            </a>
+                                <p class="ringkasan-konten-2"><?= htmlspecialchars($article['konten']); ?></p>
+                        <div class="penulis-tgl-konten">
+                            <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
+                            <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
+                        </div>
                     </div>
-                </div>
-                 <?php endforeach; ?>
-            </div>
+                <?php endforeach; ?>
 
+            </div>
         </div>
         <div class="konten-editor-pick">
-        <h1><b>TERPO</b>PULER</h1>
-        <div class="kontainer">
-            <div class="gambar-kiri">
+            <h1><b>TERPO</b>PULER</h1>
+            <div class="kontainer">
+                <?php foreach ($editorPickArticles as $editorPick): ?>
                 <div class="card">
-                    <img src="gambar/websiteplanet-dummy-820X500 (2).png" alt="" class="gambar-sisi">
+                    <img src="assets/<?= htmlspecialchars($editorPick['gambar']); ?>" alt="" class="gambar-sisi">
                     <div class="card-konten">
-                        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
+                        <h3><?= htmlspecialchars($editorPick['judul']); ?></h3>
                         <div class="penulis-tgl-konten">
-                            <label for="">5 May 2024</label>
-                            <label for="">by <b>Smith</b></label>
+                            <label><?= date('d M Y', strtotime($editorPick['tanggal'])); ?></label>
+                            <label>by <b><?= htmlspecialchars($editorPick['penulis']); ?></b></label>
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <img src="gambar/websiteplanet-dummy-800X500.png" alt="" class="gambar-sisi">
-                    <div class="card-konten">
-                        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
-                        <div class="penulis-tgl-konten">
-                            <label for="">5 May 2024</label>
-                            <label for="">by <b>Adam</b></label>
-                        </div>
-                    </div>
-                </div>   
-            </div>
-            <div class="main-card">
-                <img src="gambar/websiteplanet-dummy-820X500 (3).png" alt="">
-                <div class="main-card-konten">
-                    <div class="penulis-tgl-konten">
-                        <label for="">5 May 2024</label>
-                        <label for="">by <b>Louyi</b></label>
-                    </div>
-                        <h2 class="subjudul-main-konten"><b>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perspiciatis cupiditate officia velit!</b></h2>
-                        <p class="ringkasan-main-konten">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quia ipsam, Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum Lorem ipsum dolor sit. porro quo numquam consequuntur dolores voluptatem error ex odio. totam iste fugiat voluptate excepturi. <b>SELENGKAPNYA</b></p>
-                    </div>
-                </div>
-                <div class="gambar-kanan">
-                    <div class="card">
-                        <img src="gambar/websiteplanet-dummy-800X400 (2).png" alt="" class="gambar-sisi">
-                        <div class="card-konten">
-                            <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
-                            <div class="penulis-tgl-konten">
-                                <label for="">5 May 2024</label>
-                                <label for="">by <b>Miya</b></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="gambar/websiteplanet-dummy-800X400 (3).png" alt="" class="gambar-sisi">
-                        <div class="card-konten">
-                            <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
-                            <div class="penulis-tgl-konten">
-                                <label for="">5 May 2024</label>
-                                <label for="">by <b>David</b></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
+
         <div class="story-war">
+            <?php if ($storyWarArticle): ?>
             <div class="kontainer-story">
                 <div class="konten-kiri">
                     <h1><b>STORY:</b> OTOMOTIF</h1>
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta molestiae eum officia adipisci.</b></p>
+                    <p><b><?= htmlspecialchars($storyWarArticle['judul']); ?></b></p>
                     <div class="tgl-penulis-story">
                         <div class="nama-jabatan">
-                            <p class="nama-penulis">Sade Gui Ucar</p>
-                            <p class="jabatan">Diplomat</p>
+                            <p class="nama-penulis">by <?= htmlspecialchars($storyWarArticle['penulis']); ?></p>
                         </div>
-                        <p class="tgl-penulis">5 May 2024</p>
+                        <p class="tgl-penulis"><?= date('d M Y', strtotime($storyWarArticle['tanggal'])); ?></p>
                     </div>
-                    <p class="ringkasan-story-konten">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil lorem19 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit blanditiis impedit vitae voluptatum voluptate cupiditate itaque Lorem ipsum dolor sit amet consectetur adipisicing. Lorem ipsum dolor sit. voluptatibus quae ipsum illum repellat est reiciendis, molestiae corporis consectetur sequi temporibus reprehenderit dolorem. voluptatem perferendis molestias, fuga, unde minus iure modi repudiandae harum, nulla voluptate eaque! Beatae, lorem18 quo eum. <b>SELENGKAPNYA</b></p>
+                    <p class="ringkasan-story-konten"><?= htmlspecialchars(substr($storyWarArticle['konten'], 0, 300)); ?>... <b>SELENGKAPNYA</b></p>
                 </div>
                 <div class="konten-kanan">
-                    <img src="gambar/Yellow Ferrari F8 On Slate Brick Road  3D Sublimation 20oz Skinny Straight Tumblr Wrap  300 DPI PNG Commercial Use  Supercar Enthusiast Gift.jpg" alt="">
+                    <img src="assets/<?= htmlspecialchars($storyWarArticle['gambar']); ?>" alt="">
                 </div>
             </div>
+            <?php endif; ?>
         </div>
+
         <div class="semua-class">
             <h1><b>></b> LAINNYA</h1>
             <div class="grid-conten">
+                <?php foreach ($allClassArticles as $classArticle): ?>
                 <div class="grid-card-konten">
-                    <img src="gambar/16-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
+                    <img src="assets/<?= htmlspecialchars($classArticle['gambar']); ?>" alt="">
+                    <p><b><?= htmlspecialchars($classArticle['judul']); ?></b></p>
                 </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/84-367x267 (1).jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/28-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/29-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/49-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/64-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/7-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
-                <div class="grid-card-konten">
-                    <img src="gambar/85-367x267.jpg" alt="">
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
-        <div class="semua-berita-btn">
-            <div class="card-btn-semua-berita">
-                <button>SEMUA BERITA</button>
-            </div>
-        </div>
-
     </main>
 
     <footer>
