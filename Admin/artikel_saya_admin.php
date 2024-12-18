@@ -2,16 +2,13 @@
 session_start();
 require '../database.php';
 
-if (!isset($_SESSION['user_id'])) {
-    die("Akses ditolak. Harap login terlebih dahulu.");
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    die("Akses ditolak. Harap login sebagai admin.");
 }
 
-$userId = $_SESSION['user_id'];
-
-
-// Ambil artikel pengguna
-$stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes FROM articles WHERE author_id = :author_id ORDER BY tanggal DESC");
-$stmt->execute(['author_id' => $userId]);
+// Ambil semua artikel dari database
+$stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes, penulis FROM articles ORDER BY tanggal DESC");
+$stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -20,8 +17,8 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artikel Saya</title>
-  <link rel="stylesheet" href="artikel_saya.css">
+  <title>Semua Artikel</title>
+  <link rel="stylesheet" href="artikel_saya_admin.css">
 </head>
 <body>
   <div class="container">
@@ -29,24 +26,28 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <aside class="sidebar">
       <h3>Dashboard</h3>
       <ul>
-          <li><a href="Profile.php" class="active">Profil</a></li>
-          <li><a href="Tambah.php">Tambah Artikel</a></li>
-          <li><a href="edit_artikel.php">Edit Artikel</a></li>
-          <li><a href="artikel_saya.php">Artikel Saya</a></li>
-          <li><a href="hapus_artikel.php">Hapus Artikel</a></li>
+      <li><a href="profile_admin.php" class="active">Profil</a></li>
+        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-      <h2>Artikel Saya</h2>
+      <h2>Semua Artikel</h2>
       <div class="article-list">
         <table>
           <thead>
             <tr>
               <th>No</th>
               <th>Judul Artikel</th>
+              <th>Penulis</th>
               <th>Tanggal Dibuat</th>
               <th>Views</th>
               <th>Likes</th>
@@ -57,6 +58,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <tr>
                 <td><?= $index + 1; ?></td>
                 <td><?= htmlspecialchars($article['judul']); ?></td>
+                <td><?= htmlspecialchars($article['penulis']); ?></td>
                 <td><?= htmlspecialchars($article['tanggal']); ?></td>
                 <td><?= htmlspecialchars($article['views']); ?></td>
                 <td><?= htmlspecialchars($article['likes']); ?></td>

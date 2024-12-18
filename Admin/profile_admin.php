@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../pagelogin.html'); // Redirect jika belum login
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../pagelogin.html'); // Redirect jika belum login atau bukan admin
     exit;
 }
 
@@ -17,18 +17,17 @@ if (!$user) {
     exit;
 }
 
-
+// Hitung total artikel yang telah diverifikasi oleh admin (opsional jika dibutuhkan)
 $stmt = $conn->prepare("
-    SELECT SUM(views) AS total_views, SUM(likes) AS total_likes 
+    SELECT COUNT(*) AS total_verified 
     FROM articles 
-    WHERE author_id = :user_id
+    WHERE status = 'approved' AND verifier_id = :user_id
 ");
 $stmt->execute(['user_id' => $userId]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Set nilai total views dan likes
-$totalViews = $result['total_views'] ?? 0;
-$totalLikes = $result['total_likes'] ?? 0;
+// Set nilai total artikel yang diverifikasi
+$totalVerified = $result['total_verified'] ?? 0;
 
 ?>
 
@@ -37,8 +36,8 @@ $totalLikes = $result['total_likes'] ?? 0;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil Saya</title>
-  <link rel="stylesheet" href="profile.css?v=1.0">
+  <title>Profil Admin</title>
+  <link rel="stylesheet" href="profile_admin.css?v=1.0">
 </head>
 <body>
   <div class="container">
@@ -49,11 +48,14 @@ $totalLikes = $result['total_likes'] ?? 0;
       </div>
     <h3>Dashboard</h3>
       <ul>
-      <li><a href="Profile.php" class="active">Profil</a></li>
-      <li><a href="Tambah.php">Tambah Artikel</a></li>
-      <li><a href="edit_artikel.php">Edit Artikel</a></li>
-      <li><a href="artikel_saya.php">Artikel Saya</a></li>
-      <li><a href="hapus_artikel.php">Hapus Artikel</a></li>
+        <li><a href="profile_admin.php" class="active">Profil</a></li>
+        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
     <a href="../logout.php" class="logout">Logout</a>
   </aside>
@@ -67,7 +69,7 @@ $totalLikes = $result['total_likes'] ?? 0;
       <div class="profile-nama">
         <p class="nama-lengkap"><?php echo htmlspecialchars($user['nama_lengkap']);?></p>
         <div class="penulis-role">
-          <p><?php echo htmlspecialchars($user['role']);?></p>
+          <p>Admin</p>
           <p class="char-pemisah">|</p>
           <p><?php echo $user['jenis_kelamin'] == 'L' ? 'Laki-laki': 'Perempuan';?></p>
         </div>
@@ -79,18 +81,13 @@ $totalLikes = $result['total_likes'] ?? 0;
       <div class="edit-like-view">
         <button>EDIT PROFIL</button>
         <div class="like-view-card">
-        <div class="like-view">
-          <p class="jumlah" id="jumlah-like"><?= $totalLikes; ?></p>
-          <p class="keterangan" id="keterangan-like">LIKE</p>
-        </div>
-        <div class="like-view">
-          <p class="jumlah" id="jumlah-view"><?= $totalViews; ?></p>
-          <p class="keterangan" id="keterangan-view">VIEWERS</p>
-        </div>
+          <div class="like-view">
+            <p class="jumlah" id="jumlah-verified"><?= $totalVerified; ?></p>
+            <p class="keterangan" id="keterangan-verified">VERIFIKASI</p>
+          </div>
         </div>
       </div>
     </div>
-    
   </div>
 </body>
 </html>

@@ -2,31 +2,26 @@
 session_start();
 require '../database.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'penulis') {
-    die("Akses ditolak. Harap login terlebih dahulu.");
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    die("Akses ditolak. Harap login sebagai admin.");
 }
 
-$userId = $_SESSION['user_id'];
-
-// Ambil daftar artikel yang dimiliki oleh penulis
-$stmt = $conn->prepare("SELECT id, judul FROM articles WHERE author_id = :author_id ORDER BY tanggal DESC");
-$stmt->execute(['author_id' => $userId]);
+// Ambil semua artikel dari database
+$stmt = $conn->prepare("SELECT id, judul, penulis FROM articles ORDER BY tanggal DESC");
+$stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Ambil artikel untuk diedit jika ada parameter article_id
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['article_id'])) {
     $articleId = $_GET['article_id'];
 
-    // Query untuk mendapatkan artikel milik penulis berdasarkan ID
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id AND author_id = :author_id");
-    $stmt->execute([
-        'id' => $articleId,
-        'author_id' => $userId
-    ]);
+    // Query untuk mendapatkan artikel berdasarkan ID
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");
+    $stmt->execute(['id' => $articleId]);
     $article = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$article) {
-        die("Artikel tidak ditemukan atau Anda tidak memiliki izin untuk mengedit artikel ini.");
+        die("Artikel tidak ditemukan.");
     }
 }
 
@@ -51,52 +46,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Query update artikel
-    $stmt = $conn->prepare("UPDATE articles SET judul = :judul, konten = :konten, kategori = :kategori, gambar = :gambar WHERE id = :id AND author_id = :author_id");
+    $stmt = $conn->prepare("UPDATE articles SET judul = :judul, konten = :konten, kategori = :kategori, gambar = :gambar WHERE id = :id");
     $stmt->execute([
         ':judul' => $title,
         ':konten' => $content,
         ':kategori' => $category,
         ':gambar' => $imagePath,
-        ':id' => $articleId,
-        ':author_id' => $userId
+        ':id' => $articleId
     ]);
 
-    echo "<script>alert('Artikel berhasil diperbarui!'); window.location.href='edit_artikel.php';</script>";
+    echo "<script>alert('Artikel berhasil diperbarui!'); window.location.href='edit_artikel_admin.php';</script>";
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Artikel</title>
-  <link rel="stylesheet" href="edit_artikel.css">
+  <title>Edit Artikel (Admin)</title>
+  <link rel="stylesheet" href="edit_artikel_admin.css">
 </head>
 <body>
   <div class="container">
-  <aside class="sidebar">
-    <h3>Dashboard</h3>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3>Dashboard</h3>
       <ul>
-      <li><a href="Profile.php" class="active">Profil</a></li>
-      <li><a href="Tambah.php">Tambah Artikel</a></li>
-      <li><a href="edit_artikel.php">Edit Artikel</a></li>
-      <li><a href="artikel_saya.php">Artikel Saya</a></li>
-      <li><a href="hapus_artikel.php">Hapus Artikel</a></li>
+        <li><a href="profile_admin.php" class="active">Profil</a></li>
+        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
-    <a href="../logout.php" class="logout">Logout</a>
-  </aside>
+      <a href="../logout.php" class="logout">Logout</a>
+    </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
       <h2>Edit Artikel</h2>
 
       <!-- Form Pilih Artikel -->
-      <form method="GET" action="edit_artikel.php">
+      <form method="GET" action="edit_artikel_admin.php">
         <label for="article-id">Pilih Artikel untuk Diedit:</label>
         <select id="article-id" name="article_id" required>
           <?php foreach ($articles as $articleItem): ?>
-            <option value="<?= $articleItem['id']; ?>"><?= htmlspecialchars($articleItem['judul']); ?></option>
+            <option value="<?= $articleItem['id']; ?>">
+              <?= htmlspecialchars($articleItem['judul']) . " (Penulis: " . htmlspecialchars($articleItem['penulis']) . ")"; ?>
+            </option>
           <?php endforeach; ?>
         </select>
         <button type="submit">Edit Artikel</button>
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <!-- Form Edit Artikel -->
       <?php if (isset($article)): ?>
-      <form method="POST" enctype="multipart/form-data" action="edit_artikel.php">
+      <form method="POST" enctype="multipart/form-data" action="edit_artikel_admin.php">
         <input type="hidden" name="article_id" value="<?= $article['id']; ?>">
         <input type="hidden" name="current_image" value="<?= $article['gambar']; ?>">
 

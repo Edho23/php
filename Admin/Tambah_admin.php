@@ -2,10 +2,9 @@
 session_start();
 require '../database.php';
 
-if (!isset($_SESSION['user_id'])) {
-    die("Akses ditolak. Harap login terlebih dahulu.");
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    die("Akses ditolak. Harap login sebagai admin.");
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
@@ -13,12 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content = $_POST['content'];
     $fullContent = $_POST['isi_artikel'];
     $layout = $_POST['layout'];
+    $section = $_POST['section'];
     $imagePath = null;
     $extraImage1 = null;
     $extraImage2 = null;
 
     // Validasi input
-    if (empty($title) || empty($category) || empty($content) || empty($fullContent)) {
+    if (empty($title) || empty($category) || empty($content) || empty($fullContent) || empty($section)) {
         die("Harap isi semua bidang yang diperlukan.");
     }
 
@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Simpan artikel ke database
-    $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout) 
-                            VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout)");
+    $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout, section, status) 
+                            VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout, :section, :status)");
     $stmt->execute([
         'kategori' => $category,
         'judul' => $title,
@@ -65,12 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'gambar2' => $extraImage1,
         'gambar3' => $extraImage2,
         'tanggal' => date('Y-m-d'),
-        'penulis' => $_SESSION['username'] ?? 'Admin',
-        'author_id' => $_SESSION['user_id'] ?? null,
-        'layout' => $layout
+        'penulis' => $_SESSION['username'],
+        'author_id' => $_SESSION['user_id'],
+        'layout' => $layout,
+        'section' => $section,
+        'status' => 'approved' // Artikel langsung disetujui
     ]);
 
-    echo "<script>alert('Artikel berhasil ditambahkan!'); window.location.href='Tambah.php';</script>";
+    echo "<script>alert('Artikel berhasil ditambahkan dan disetujui!'); window.location.href='Tambah_admin.php';</script>";
 }
 ?>
 
@@ -80,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tambah Artikel Baru</title>
-  <link rel="stylesheet" href="Tambah.css">
+  <link rel="stylesheet" href="Tambah_admin.css">
   
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -106,11 +108,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <h3>Dashboard</h3>
       <ul>
-        <li><a href="Profile.php" class="active">Profil</a></li>
-        <li><a href="Tambah.php">Tambah Artikel</a></li>
-        <li><a href="edit_artikel.php">Edit Artikel</a></li>
-        <li><a href="artikel_saya.php">Artikel Saya</a></li>
-        <li><a href="hapus_artikel.php">Hapus Artikel</a></li>
+        <li><a href="profile_admin.php" class="active">Profil</a></li>
+        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
     </aside>
@@ -140,6 +145,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="layout1">Layout 1 (Gambar sebelum teks)</option>
             <option value="layout2">Layout 2 (2 Gambar setelah teks)</option>
             <option value="layout3">Layout 3 (3 Gambar setelah teks)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="section">Pilih Section</label>
+          <select id="section" name="section" required>
+            <option value="konten1">Konten 1</option>
+            <option value="konten2">Konten 2</option>
+            <option value="konten_editor_pick">Editor Pick</option>
+            <option value="story_war">Story War</option>
+            <option value="semua_class">Semua Class</option>
           </select>
         </div>
         <div class="form-group">

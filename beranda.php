@@ -79,9 +79,16 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
                     <div class="baris"></div>
                 </div>
                 <?php if ($loggedIn): ?>
-                    <div class="loginAkun-btn">
-                        <a href="tes/profile.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil -->
-                        <?php else: ?>
+    <div class="loginAkun-btn">
+        <?php if ($_SESSION['role'] === 'admin'): ?>
+            <a href="Admin/profile_admin.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil admin -->
+        <?php elseif ($_SESSION['role'] === 'penulis'): ?>
+            <a href="tes/profile.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil penulis -->
+        <?php endif; ?>
+    </div>
+<?php else: ?>
+    <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
+    <a href="daftar.php"><button>DAFTAR</button></a>
                         <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
                         <a href="pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
                         <?php endif; ?>
