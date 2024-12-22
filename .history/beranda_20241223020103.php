@@ -72,10 +72,10 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
                     </div>
                     <a class="kategori" id="beranda" href="beranda.php">BERANDA</a>
                     <a class="kategori" id="bisnis" href="../php-main-beta/Kategori-Page/Kbisnis.html">BISNIS</a>
-                    <a class="kategori" id="keuangan" href="../php-main-beta/Kategori-Page/Kkeuangan.html">KEUANGAN</a>
-                    <a class="kategori" id="olahraga" href="../php-main-beta/Kategori-Page/Kolahraga.html">OLAHRAGA</a>
-                    <a class="kategori" id="internasional" href="../php-main-beta/Kategori-Page/Kinternasional.html">INTERNASIONAL</a>
-                    <a class="kategori" id="budaya" href="../php-main-beta/Kategori-Page/Kbudaya.html">BUDAYA</a>
+                    <a class="kategori" id="keuangan" href="../php-main-beta/Kategori-Page/">KEUANGAN</a>
+                    <a class="kategori" id="olahraga" href="olahraga.php">OLAHRAGA</a>
+                    <a class="kategori" id="internasional" href="internasional.php">INTERNASIONAL</a>
+                    <a class="kategori" id="budaya" href="budaya.php">BUDAYA</a>
                 </nav>
             </div>
             <div class="kanan-nav">

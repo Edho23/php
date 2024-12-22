@@ -51,7 +51,7 @@
     color: #fd5f00;
   }
   
-  header #beranda {
+  header #bisnis {
     color: #fd5f00;
     border-bottom: 2px solid #fd5f00;
     padding: 10px;
@@ -223,6 +223,7 @@
 
   .konten-terbaru {
     display: flex;
+    justify-content: center;
     margin: 20px 20px;
     margin-top: 20px;
   }
@@ -295,31 +296,41 @@
   }
 
   .pilihan-untukmu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px;
+}
+
+.panel-pilihan-untukmu {
     display: flex;
-    margin-left: 40px;
-  }
-
-  .pilihan-untukmu .panel-pilihan-untukmu img {
-    width: 350px;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
     border-radius: 5px;
-  }
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
 
-  .panel-pilihan-untukmu p.subjudul-pilihan-untukmu {
-    margin-bottom: 5px;
-    margin-left: 2px;
-    padding: 10px 0;
-    padding-right: 25px;
-    font-size: 18px;
-  }
+.panel-pilihan-untukmu img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    object-fit: cover;
+}
 
-  .pilihan-untukmu {
-    margin-bottom: 40px;
-  }
+.subjudul-pilihan-untukmu {
+    font-size: 16px;
+    text-align: center;
+    margin: 10px 0;
+    color: #333;
+}
 
-  .pilihan-untukmu .tgl-jam-artikel label {
-    font-size: smaller;
-    color: #474747;
-  }
+.tgl-jam-artikel {
+    font-size: 14px;
+    color: #777;
+    text-align: center;
+}
 
   /* layout Konten 4 */
 
@@ -583,4 +594,59 @@
 .social-media a img {
   width: 24px;
   height: 24px;
+}
+
+/* Media Queries untuk layar kecil */
+@media (max-width: 1481px) {
+  /* Nav style */
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  nav {
+    margin-left: 45px;
+  }
+
+  header nav a {
+    font-size: 14px;
+    margin-left: 0;
+    margin: 0 25px;
+  }
+
+  /* Main Style */
+  .container .judul-konten h3 {
+    font-size: 28px;
+  }
+
+  .container .img-ekonomi-hotline img {
+    width: 500px;
+    height: 320px;
+    object-fit: cover;
+  }
+
+  .konten-kanan-hotline img {
+    height: 180px;
+  }
+
+  .penjelasan-konten p {
+    font-size: 15px;
+  }
+
+  /* Konten Terbaru */
+  
+
+}
+
+/* Media Queries untuk layar sangat kecil */
+@media (max-width: 480px) {
+  .pilihan-untukmu {
+      grid-template-columns: 1fr;
+  }
+
+  .panel-pilihan-untukmu {
+      padding: 10px;
+  }
 }

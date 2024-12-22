@@ -1,5 +1,3 @@
-/* Beranda css */
-
 * {
   margin: 0;
   padding: 0;
@@ -53,7 +51,7 @@ header .kategori:hover {
   color: #fd5f00;
 }
 
-header #beranda {
+header #bisnis {
   color: #fd5f00;
   border-bottom: 2px solid #fd5f00;
   padding: 10px;
