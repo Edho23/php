@@ -7,33 +7,61 @@ $username = $loggedIn ? $_SESSION['username'] : ''; // Mendapatkan username peng
 <?php
 require 'database.php'; // Koneksi database
 
+// Query untuk mendapatkan artikel untuk section konten-1
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+$stmt->execute();
+$konten1Article = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Query untuk mendapatkan artikel untuk section konten-2
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+$stmt->execute();
+$konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Query untuk mendapatkan artikel untuk konten-editor-pick
 $stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
-$editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC); // Artikel yang akan ditampilkan
+$editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-$stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = 'Bisnis' ORDER BY views DESC LIMIT 1");
+// Query untuk mendapatkan artikel dengan section "story-war"
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'story-war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
 $stmt->execute();
-$article = $stmt->fetch(PDO::FETCH_ASSOC); // Ambil artikel utama
+$storyWarArticle = $stmt->fetch(PDO::FETCH_ASSOC);
 
-try {
-    // Query untuk mengambil semua artikel
-    $stmt = $conn->prepare("SELECT * FROM articles ORDER BY tanggal DESC");
+// Query untuk mendapatkan artikel di semua-class dengan kategori tertentu
+$selectedCategory = isset($_GET['kategori']) ? $_GET['kategori'] : null;
+
+if ($selectedCategory) {
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua-class' AND is_verified = 1 AND kategori = :kategori ORDER BY tanggal DESC");
+    $stmt->execute(['kategori' => $selectedCategory]);
+    $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC");
     $stmt->execute();
-    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC); // Ambil semua data sebagai array asosiatif
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-    $articles = []; // Set ke array kosong jika terjadi error
+    $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+// Query untuk mendapatkan artikel berdasarkan kategori tertentu
+function getArticlesByCategory($conn, $kategori) {
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+    $stmt->execute(['kategori' => $kategori]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Ambil artikel untuk setiap kategori
+$bisnisArticles = getArticlesByCategory($conn, 'Bisnis');
+$keuanganArticles = getArticlesByCategory($conn, 'Keuangan');
+$olahragaArticles = getArticlesByCategory($conn, 'Olahraga');
+$internasionalArticles = getArticlesByCategory($conn, 'Internasional');
+$budayaArticles = getArticlesByCategory($conn, 'Budaya');
+
+// Ambil artikel trending untuk setiap kategori
 function getTrendingArticles($conn, $kategori) {
     $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE kategori = :kategori ORDER BY views DESC LIMIT 5");
     $stmt->execute(['kategori' => $kategori]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Ambil artikel untuk setiap kategori
 $trendingBudaya = getTrendingArticles($conn, 'Budaya');
 $trendingBisnis = getTrendingArticles($conn, 'Bisnis');
 $trendingOlahraga = getTrendingArticles($conn, 'Olahraga');
@@ -92,11 +120,10 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
             <a href="tes/profile.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil penulis -->
         <?php endif; ?>
     </div>
-<?php else: ?>
-                        <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
-                        <a href="pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
-                        <?php endif; ?>
-                    </div>
+        <?php else: ?>
+                <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
+                <a href="pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
+            <?php endif; ?>
             </div>
         </div>
     </header>
@@ -117,51 +144,63 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
     </div>
         <div class="konten">
             <div class="konten-1">
+            <?php if ($konten1Article): ?>
                 <div class="layout">
                     <div class="genre">
-                        <a href="kategori.php?kategori=Bisnis"><b>BISNIS</b></a> <!-- Tautan menuju kategori -->
+                    <!-- Tautan dinamis menuju kategori -->
+                        <a href="kategori.php?kategori=<?= htmlspecialchars($konten1Article['kategori']); ?>">
+                            <b><?= htmlspecialchars(strtoupper($konten1Article['kategori'])); ?></b>
+                        </a>
                     </div>
-             <div class="subjudul-konten">
-                    <p class="judul-hotline">
-                    <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b><?= htmlspecialchars($article['judul']); ?></b></a>
-                    </p>
-                 <div class="penulis-tgl">
-                    <label for=""><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-                    <label for="">By <b><?= htmlspecialchars($article['penulis']); ?></b></label>
-            </div>
-         <div class="ringkasan">
-                <p>
-                <?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...
-                <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b>SELENGKAPNYA</b></a>
-                </p>
-            </div>
-        </div>
-    </div>
-<div class="layout">
-    <img class="gambarHotline" src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="Bisnis">
-</div>
+                            <div class="subjudul-konten">
+                                <p class="judul-hotline">
+                                <!-- Tautan dinamis menuju artikel -->
+                                <a href="tes/artikel.php?id=<?= htmlspecialchars($konten1Article['id']); ?>">
+                                    <b><?= htmlspecialchars($konten1Article['judul']); ?></b>
+                                </a>
+                                </p>
+                                <div class="penulis-tgl">
+                                    <label><?= date('d M Y', strtotime($konten1Article['tanggal'])); ?></label>
+                                    <label>By <b><?= htmlspecialchars($konten1Article['penulis']); ?></b></label>
+                                </div>
+                                    <div class="ringkasan">
+                                        <p>
+                                        <?= htmlspecialchars(substr($konten1Article['konten'], 0, 150)); ?>...
+                                        <a href="tes/artikel.php?id=<?= htmlspecialchars($konten1Article['id']); ?>">
+                                        <b>SELENGKAPNYA</b>
+                                        </a>
+                                        </p>
+                                    </div>
+                            </div>
+                </div>
+                    <div class="layout">
+                        <img class="gambarHotline" src="assets/<?= htmlspecialchars($konten1Article['gambar']); ?>" alt="<?= htmlspecialchars($konten1Article['kategori']); ?>">
+                    </div>
+                    <?php else: ?>
+                        <div class="layout">
+                            <p>Belum ada artikel untuk ditampilkan di section ini.</p>
+                        </div>
+                        <?php endif; ?>
+    <div class="layout">
+        <div class="trending-layout">
+                <h3>#TRENDING</h3>
 
-                <div class="layout">
-    <div class="trending-layout">
-        <h3>#TRENDING</h3>
-
-        <!-- Trending Budaya -->
-        <div class="trending-card">
-            <div class="nomor-genre">
-                <label for="">1 · </label>
-                <label for="">Budaya</label>
+            <!-- Trending Budaya -->
+            <div class="trending-card">
+                <div class="nomor-genre">
+                    <label for="">1 · </label>
+                    <label for="">Budaya</label>
+                </div>
+                <?php
+                $trendingBudaya = getTrendingArticles($conn, 'Budaya');
+                if ($trendingBudaya): ?>
+                    <a href="tes/artikel.php?id=<?= $trendingBudaya[0]['id']; ?>">
+                        <?= htmlspecialchars($trendingBudaya[0]['judul']); ?>
+                    </a>
+                <?php else: ?>
+                    <a href="#">Tidak ada artikel trending</a>
+                <?php endif; ?>
             </div>
-            <?php
-            $trendingBudaya = getTrendingArticles($conn, 'Budaya');
-            if ($trendingBudaya): ?>
-                <a href="tes/artikel.php?id=<?= $trendingBudaya[0]['id']; ?>">
-                    <?= htmlspecialchars($trendingBudaya[0]['judul']); ?>
-                </a>
-            <?php else: ?>
-                <a href="#">Tidak ada artikel trending</a>
-            <?php endif; ?>
-        </div>
-
         <!-- Trending Bisnis -->
         <div class="trending-card">
             <div class="nomor-genre">
@@ -231,26 +270,24 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
         </div>
     </div>
 </div>
-
             </div>
             <div class="konten-2">
-                         <?php foreach ($articles as $article): ?>
-                <div class="panel">
-                    <a href="tes/artikel.php?id=<?= $article['id']; ?>">
-                        <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article['judul']); ?>">
-                    </a>
-                    <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
-                        <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
-                    </a>
-                    <p class="ringkasan-konten-2"><?= htmlspecialchars($article['konten']); ?></p>
-                    <div class="penulis-tgl-konten">
-                        <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-                        <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
-                    </div>
-                </div>
-                 <?php endforeach; ?>
+    <?php foreach ($konten2Articles as $article): ?>
+        <div class="panel">
+            <a href="tes/artikel.php?id=<?= $article['id']; ?>">
+                <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article['judul']); ?>">
+            </a>
+            <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
+                <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
+            </a>
+            <p class="ringkasan-konten-2"><?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...</p>
+            <div class="penulis-tgl-konten">
+                <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
+                <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
             </div>
-
+        </div>
+    <?php endforeach; ?>
+</div>
         </div>
         <div class="konten-editor-pick">
     <h1><b>TERPO</b>PULER</h1>
@@ -318,158 +355,166 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
         </div>
     </div>
 </div>
-
-
-        <div class="story-war">
-            <div class="kontainer-story">
-                <div class="konten-kiri">
-                    <h1><b>STORY:</b> OTOMOTIF</h1>
-                    <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta molestiae eum officia adipisci.</b></p>
-                    <div class="tgl-penulis-story">
-                        <div class="nama-jabatan">
-                            <p class="nama-penulis">Sade Gui Ucar</p>
-                            <p class="jabatan">Diplomat</p>
-                        </div>
-                        <p class="tgl-penulis">5 May 2024</p>
-                    </div>
-                    <p class="ringkasan-story-konten">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil lorem19 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit blanditiis impedit vitae voluptatum voluptate cupiditate itaque Lorem ipsum dolor sit amet consectetur adipisicing. Lorem ipsum dolor sit. voluptatibus quae ipsum illum repellat est reiciendis, molestiae corporis consectetur sequi temporibus reprehenderit dolorem. voluptatem perferendis molestias, fuga, unde minus iure modi repudiandae harum, nulla voluptate eaque! Beatae, lorem18 quo eum. <b>SELENGKAPNYA</b></p>
+<?php if ($storyWarArticle): ?>
+<div class="story-war">
+    <div class="kontainer-story">
+        <div class="konten-kiri">
+            <h1>
+                <b>STORY:</b> <?= htmlspecialchars($storyWarArticle['kategori']); ?>
+            </h1>
+            <p>
+                <a href="tes/artikel.php?id=<?= htmlspecialchars($storyWarArticle['id']); ?>">
+                    <b><?= htmlspecialchars(substr($storyWarArticle['judul'], 0, 100)); ?></b>
+                </a>
+            </p>
+            <div class="tgl-penulis-story">
+                <div class="nama-jabatan">
+                    <p class="nama-penulis"><?= htmlspecialchars($storyWarArticle['penulis']); ?></p>
+                    <p class="jabatan">Penulis</p>
                 </div>
-                <div class="konten-kanan">
-                    <img src="gambar/Yellow Ferrari F8 On Slate Brick Road  3D Sublimation 20oz Skinny Straight Tumblr Wrap  300 DPI PNG Commercial Use  Supercar Enthusiast Gift.jpg" alt="">
-                </div>
+                <p class="tgl-penulis"><?= date('d M Y', strtotime($storyWarArticle['tanggal'])); ?></p>
             </div>
+            <p class="ringkasan-story-konten">
+                <?= htmlspecialchars(substr($storyWarArticle['konten'], 0, 2000)); ?>...
+                <a href="tes/artikel.php?id=<?= htmlspecialchars($storyWarArticle['id']); ?>">
+                    <b>SELENGKAPNYA</b>
+                </a>
+            </p>
         </div>
-        <div class="semua-class">
-            <h1><b>></b> LAINNYA</h1>
-            <div class="grid-conten">
-                <div class="judul-kategori">
-                    <label>BISNIS</label>
-                </div>    
-                <div class="kategori-lainnya" id="bisnis">    
+        <div class="konten-kanan">
+            <img src="assets/<?= htmlspecialchars($storyWarArticle['gambar']); ?>" alt="<?= htmlspecialchars($storyWarArticle['judul']); ?>">
+        </div>
+    </div>
+</div>
+<?php else: ?>
+<div class="story-war">
+    <div class="kontainer-story">
+        <p>Belum ada artikel untuk ditampilkan di bagian ini.</p>
+    </div>
+</div>
+<?php endif; ?>
+
+
+<div class="semua-class">
+    <h1><b>></b> LAINNYA</h1>
+    <div class="grid-conten">
+        <!-- Kategori Bisnis -->
+        <div class="judul-kategori">
+            <label>BISNIS</label>
+        </div>
+        <div class="kategori-lainnya" id="bisnis">
+            <?php if (!empty($bisnisArticles)): ?>
+                <?php foreach ($bisnisArticles as $article): ?>
                     <div class="grid-card-konten">
-                        <img src="gambar/16-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
+                        <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                        </a>
+                        <p>
+                            <b><a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars(substr($article['judul'], 0, 50)); ?>...</a>
+                            </b>
+                        </p>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel untuk kategori ini.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Kategori Keuangan -->
+        <div class="judul-kategori">
+            <label>KEUANGAN</label>
+        </div>
+        <div class="kategori-lainnya" id="keuangan">
+            <?php if (!empty($keuanganArticles)): ?>
+                <?php foreach ($keuanganArticles as $article): ?>
                     <div class="grid-card-konten">
-                        <img src="gambar/84-367x267 (1).jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
+                        <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                        </a>
+                        <p>
+                            <b><a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars(substr($article['judul'], 0, 50)); ?>...</a>
+                            </b>
+                        </p>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel untuk kategori ini.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Kategori Olahraga -->
+        <div class="judul-kategori">
+            <label>OLAHRAGA</label>
+        </div>
+        <div class="kategori-lainnya" id="olahraga">
+            <?php if (!empty($olahragaArticles)): ?>
+                <?php foreach ($olahragaArticles as $article): ?>
                     <div class="grid-card-konten">
-                        <img src="gambar/28-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
+                        <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                        </a>
+                        <p>
+                            <b><a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars(substr($article['judul'], 0, 50)); ?>...</a>
+                            </b>
+                        </p>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel untuk kategori ini.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Kategori Internasional -->
+        <div class="judul-kategori">
+            <label>INTERNASIONAL</label>
+        </div>
+        <div class="kategori-lainnya" id="internasional">
+            <?php if (!empty($internasionalArticles)): ?>
+                <?php foreach ($internasionalArticles as $article): ?>
                     <div class="grid-card-konten">
-                        <img src="gambar/29-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
+                        <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                        </a>
+                        <p>
+                            <b><a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars(substr($article['judul'], 0, 50)); ?>...</a>
+                            </b>
+                        </p>
                     </div>
-                </div>
-                <div class="judul-kategori">
-                    <label>BUDAYA</label>
-                </div>
-                <div class="kategori-lainnya" id="budaya">
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel untuk kategori ini.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Kategori Budaya -->
+        <div class="judul-kategori">
+            <label>BUDAYA</label>
+        </div>
+        <div class="kategori-lainnya" id="budaya">
+            <?php if (!empty($budayaArticles)): ?>
+                <?php foreach ($budayaArticles as $article): ?>
                     <div class="grid-card-konten">
-                        <img src="gambar/16-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
+                        <a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                            <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                        </a>
+                        <p>
+                            <b><a href="tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars(substr($article['judul'], 0, 50)); ?>...</a>
+                            </b>
+                        </p>
                     </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/84-367x267 (1).jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/28-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/29-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                </div>
-                <div class="judul-kategori">
-                    <label>BUDAYA</label>
-                </div>
-                <div class="kategori-lainnya" id="budaya">        
-                    <div class="grid-card-konten">
-                        <img src="gambar/16-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/84-367x267 (1).jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/28-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/29-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                </div>
-                <div class="judul-kategori">
-                    <label>BUDAYA</label>
-                </div>
-                <div class="kategori-lainnya" id="budaya">
-                    <div class="grid-card-konten">
-                        <img src="gambar/16-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/84-367x267 (1).jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/28-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/29-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                </div>
-                <div class="judul-kategori">
-                    <label>KEUANGAN</label>
-                </div>
-                <div class="kategori-lainnya" id="keuangan">
-                    <div class="grid-card-konten">
-                        <img src="gambar/16-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/84-367x267 (1).jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/28-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/29-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                </div>
-                <div class="judul-kategori">
-                    <label>OLAHRAGA</label>
-                </div>
-                <div class="kategori-lainnya" id="olahraga">
-                    <div class="grid-card-konten">
-                        <img src="gambar/16-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/84-367x267 (1).jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/28-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                    <div class="grid-card-konten">
-                        <img src="gambar/29-367x267.jpg" alt="">
-                        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                    </div>
-                </div>
-            </div>
-            </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel untuk kategori ini.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
         <div class="semua-berita-btn">
             <div class="card-btn-semua-berita">
                 <button>SEMUA BERITA</button>

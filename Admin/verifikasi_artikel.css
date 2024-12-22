@@ -168,3 +168,43 @@ body {
 .btn-reject:hover {
   background-color: #e53935;
 }
+
+/* Dropdown Kategori Container */
+.kategori-container {
+  display: none; 
+  margin-top: 1px;
+}
+
+/* Dropdown Styling */
+.kategori-container .select-category {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%; 
+  max-width: 200px; 
+}
+
+/* Transition untuk Dropdown */
+.kategori-container.show {
+  display: block; 
+  transition: all 0.3s ease;
+}
+
+/* Error Message Styling */
+.error-message {
+  color: #f44336;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: none; 
+}
+
+/* Error Message Active */
+.error-message.active {
+  display: block; 
+}
+
+/* Tabel Section Select */
+.data-table select {
+  width: 100%;
+  max-width: 200px; 
+}

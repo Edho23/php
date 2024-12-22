@@ -574,6 +574,12 @@ main h1 b {
   filter: brightness(0.9);
 }
 
+.konten-kiri p a {
+  color: #000;
+}
+.konten-kiri a {
+  text-decoration: none;
+}
 .konten-kiri p b {
   font-size: 25px;
 }
