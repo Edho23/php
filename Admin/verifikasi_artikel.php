@@ -28,15 +28,23 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
     $section = $_POST['section'];
+    $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
 
     if (empty($section)) {
         die("Section tidak boleh kosong. Pilih section sebelum memverifikasi.");
     }
 
-    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section WHERE id = :id");
+    // Validasi kategori jika section adalah "semua-class"
+    if ($section === 'semua-class' && empty($kategori)) {
+        die("Harap pilih kategori untuk section 'semua-class'.");
+    }
+
+    // Update artikel di database
+    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, kategori = :kategori WHERE id = :id");
     $stmt->execute([
         'id' => $articleId,
-        'section' => $section
+        'section' => $section,
+        'kategori' => $kategori
     ]);
 
     echo "<script>alert('Artikel berhasil diverifikasi!'); window.location.href='verifikasi_artikel.php';</script>";
@@ -110,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
               <td>
                 <form method="POST" action="verifikasi_artikel.php" class="verifikasi-form">
                   <input type="hidden" name="article_id" value="<?= $article['id']; ?>">
-                  <select name="section" class="select-section" required>
+                  <select name="section" class="select-section" onchange="toggleKategori(this)" required>
                     <option value="" disabled selected>Pilih Section</option>
                     <option value="konten-1">Konten 1</option>
                     <option value="konten-2">Konten 2</option>
@@ -118,6 +126,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
                     <option value="story-war">Story War</option>
                     <option value="semua-class">Semua Class</option>
                   </select>
+                  <div class="kategori-container">
+                    <select name="kategori" class="select-category">
+                      <option value="" disabled selected>Pilih Kategori</option>
+                      <option value="Bisnis">Bisnis</option>
+                      <option value="Keuangan">Keuangan</option>
+                      <option value="Olahraga">Olahraga</option>
+                      <option value="Internasional">Internasional</option>
+                      <option value="Budaya">Budaya</option>
+                    </select>
+                  </div>
                   <button type="submit" class="btn btn-approve">Verifikasi</button>
                 </form>
               </td>
@@ -130,5 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
       </table>
     </main>
   </div>
+
+  <!-- Script -->
+  <script src="verifikasi_artikel.js"></script>
 </body>
 </html>
