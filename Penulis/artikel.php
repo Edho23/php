@@ -1,43 +1,38 @@
 <?php
-session_start(); // Memulai session
-$loggedIn = isset($_SESSION['user_id']); // Mengecek apakah pengguna sudah login
-$username = $loggedIn ? $_SESSION['username'] : ''; // Mendapatkan username pengguna yang login
+session_start(); 
+$loggedIn = isset($_SESSION['user_id']); 
+$username = $loggedIn ? $_SESSION['username'] : ''; 
 
 require '../database.php';
 
-// Pastikan parameter ID ada
+
 if (!isset($_GET['id'])) {
     die("Artikel tidak ditemukan.");
 }
 
 $articleId = $_GET['id'];
 
-// Cek apakah user sudah melihat artikel
+
 if ($loggedIn) {
     $stmt = $conn->prepare("SELECT has_viewed FROM article_interactions WHERE article_id = :article_id AND user_id = :user_id");
     $stmt->execute(['article_id' => $articleId, 'user_id' => $_SESSION['user_id']]);
     $interaction = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$interaction) {
-        // Jika user belum melihat artikel, tambahkan interaksi baru dan tingkatkan views
         $stmt = $conn->prepare("INSERT INTO article_interactions (article_id, user_id, has_viewed) VALUES (:article_id, :user_id, 1)");
         $stmt->execute(['article_id' => $articleId, 'user_id' => $_SESSION['user_id']]);
 
-        // Tingkatkan jumlah views di artikel
         $stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = :id");
         $stmt->execute(['id' => $articleId]);
     } elseif (!$interaction['has_viewed']) {
-        // Jika user ada di database tetapi belum melihat artikel, perbarui status
         $stmt = $conn->prepare("UPDATE article_interactions SET has_viewed = 1 WHERE article_id = :article_id AND user_id = :user_id");
         $stmt->execute(['article_id' => $articleId, 'user_id' => $_SESSION['user_id']]);
 
-        // Tingkatkan jumlah views di artikel
         $stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = :id");
         $stmt->execute(['id' => $articleId]);
     }
 }
 
-// Query artikel berdasarkan ID
 $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");
 $stmt->execute(['id' => $articleId]);
 $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -46,7 +41,7 @@ if (!$article) {
     die("Artikel tidak ditemukan.");
 }
 
-// Pastikan layout disesuaikan
+
 $layout = $article['layout'];
 ?>
 
@@ -93,12 +88,19 @@ $layout = $article['layout'];
                     <div class="baris"></div>
                 </div>
                 <?php if ($loggedIn): ?>
-                    
-                    <a href="tes/profile.php"><img src="../gambar/user.png" alt=""></a> <!-- Tautan ke profil -->
+                <div class="loginAkun-btn">
+                    <?php if ($_SESSION['role'] === 'admin'): ?>
+                    <a href="../Admin/profile_admin.php"><img src="../gambar/icons8-user-100.png" alt=""></a> <!-- Tautan ke profil -->
+                    <?php elseif ($_SESSION['role'] === 'penulis'): ?>
+                    <a href="profile.php"><img src="../gambar/icons8-user-100.png" alt=""></a> <!-- Tautan ke profil -->
+                    <?php elseif ($_SESSION['role'] === 'pengguna'): ?>
+                    <a href="../pengguna/profile_pengguna.php"><img src="../gambar/icons8-user-100.png" alt=""></a> <!-- Tautan ke profil -->
+                    <?php endif; ?>
+                </div>
                 <?php else: ?>
                     <a href="../pagelogin.html"><button id="login-btn">MASUK</button></a>
                     <a href="../pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
-                <?php endif; ?>
+                    <?php endif; ?>
             </div>
         </div>
     </header>

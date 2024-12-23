@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: ../pagelogin.html'); // Redirect jika belum login atau bukan admin
+    header('Location: ../pagelogin.html'); 
     exit;
 }
 
-require '../database.php'; // Jalur diperbarui untuk mengakses database.php dari folder tes
+require '../database.php'; 
 
 $userId = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
@@ -17,7 +17,7 @@ if (!$user) {
     exit;
 }
 
-// Hitung total artikel yang telah diverifikasi oleh admin (opsional jika dibutuhkan)
+
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS total_verified 
     FROM articles 
@@ -26,7 +26,7 @@ $stmt = $conn->prepare("
 $stmt->execute(['user_id' => $userId]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Set nilai total artikel yang diverifikasi
+
 $totalVerified = $result['total_verified'] ?? 0;
 
 ?>

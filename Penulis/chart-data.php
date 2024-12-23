@@ -1,10 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-// Sertakan file database.php
+
 require_once '../database.php';
 
-// Periksa apakah koneksi tersedia
+
 if (!isset($conn)) {
     die(json_encode(['error' => 'Koneksi database tidak tersedia.']));
 }

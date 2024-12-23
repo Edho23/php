@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $extraImage1 = null;
     $extraImage2 = null;
 
-    // Validasi input
+
     if (empty($title) || empty($category) || empty($content) || empty($fullContent)) {
         die("Harap isi semua bidang yang diperlukan.");
     }
 
-    // Upload gambar sampul
+
     $targetDir = "../assets/";
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0755, true);
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Gambar sampul wajib diunggah.");
     }
 
-    // Upload gambar tambahan untuk layout2 dan layout3
+
     if ($layout === 'layout2' || $layout === 'layout3') {
         if (!empty($_FILES['gambar2']['name'])) {
             $extraImage1 = $targetDir . basename($_FILES['gambar2']['name']);
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Simpan artikel ke database
+
     $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout, is_verified) 
                             VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout, :is_verified)");
     $stmt->execute([
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'penulis' => $_SESSION['username'] ?? 'Penulis',
         'author_id' => $_SESSION['user_id'] ?? null,
         'layout' => $layout,
-        'is_verified' => 0 // Artikel belum diverifikasi
+        'is_verified' => 0 
     ]);
 
     echo "<script>alert('Artikel berhasil ditambahkan dan menunggu verifikasi admin.'); window.location.href='Tambah.php';</script>";

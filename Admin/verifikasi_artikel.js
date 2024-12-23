@@ -5,6 +5,6 @@ function toggleKategori(selectElement) {
         kategoriContainer.style.display = 'block';
     } else {
         kategoriContainer.style.display = 'none';
-        kategoriContainer.querySelector('select').value = ""; // Reset kategori
+        kategoriContainer.querySelector('select').value = ""; 
     }
 }

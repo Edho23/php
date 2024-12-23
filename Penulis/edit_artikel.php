@@ -8,16 +8,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'penulis') {
 
 $userId = $_SESSION['user_id'];
 
-// Ambil daftar artikel yang dimiliki oleh penulis
+
 $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE author_id = :author_id ORDER BY tanggal DESC");
 $stmt->execute(['author_id' => $userId]);
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Ambil artikel untuk diedit jika ada parameter article_id
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['article_id'])) {
     $articleId = $_GET['article_id'];
 
-    // Query untuk mendapatkan artikel milik penulis berdasarkan ID
     $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id AND author_id = :author_id");
     $stmt->execute([
         'id' => $articleId,
@@ -30,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['article_id'])) {
     }
 }
 
-// Proses update artikel
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $articleId = $_POST['article_id'];
     $title = $_POST['title'];
@@ -38,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category = $_POST['category'];
     $imagePath = $_POST['current_image'];
 
-    // Upload gambar baru jika ada
     if (!empty($_FILES['image']['name'])) {
         $targetDir = "../assets/";
         if (!is_dir($targetDir)) {
@@ -50,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Query update artikel
     $stmt = $conn->prepare("UPDATE articles SET judul = :judul, konten = :konten, kategori = :kategori, gambar = :gambar WHERE id = :id AND author_id = :author_id");
     $stmt->execute([
         ':judul' => $title,

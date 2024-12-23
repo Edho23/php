@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Ambil semua artikel dari database
+
 $stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes, penulis FROM articles ORDER BY tanggal DESC");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -6,11 +6,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Proses hapus artikel
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
 
-    // Query untuk memastikan artikel ada
+
     $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");
     $stmt->execute(['id' => $articleId]);
     $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -19,14 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
         die("Artikel tidak ditemukan.");
     }
 
-    // Hapus artikel dari database
     $stmt = $conn->prepare("DELETE FROM articles WHERE id = :id");
     $stmt->execute(['id' => $articleId]);
 
     echo "<script>alert('Artikel berhasil dihapus!'); window.location.href='hapus_artikel_admin.php';</script>";
 }
 
-// Ambil daftar semua artikel
+
 $stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes, penulis FROM articles ORDER BY tanggal DESC");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -185,13 +185,13 @@ body {
   max-width: 200px; 
 }
 
-/* Transition untuk Dropdown */
+
 .kategori-container.show {
   display: block; 
   transition: all 0.3s ease;
 }
 
-/* Error Message Styling */
+
 .error-message {
   color: #f44336;
   font-size: 0.9em;

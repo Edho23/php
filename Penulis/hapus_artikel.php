@@ -8,16 +8,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'penulis') {
 
 $userId = $_SESSION['user_id'];
 
-// Ambil artikel pengguna
 $stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes FROM articles WHERE author_id = :author_id ORDER BY tanggal DESC");
 $stmt->execute(['author_id' => $userId]);
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Proses hapus artikel
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
 
-    // Pastikan artikel adalah milik pengguna yang login
     $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id AND author_id = :author_id");
     $stmt->execute([
         'id' => $articleId,
@@ -29,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
         die("Artikel tidak ditemukan atau Anda tidak memiliki izin untuk menghapus artikel ini.");
     }
 
-    // Hapus artikel dari database
     $stmt = $conn->prepare("DELETE FROM articles WHERE id = :id AND author_id = :author_id");
     $stmt->execute([
         'id' => $articleId,

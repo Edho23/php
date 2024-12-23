@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Fetch data dari chart-data.php
     fetch('chart-data.php')
         .then(response => response.json())
         .then(data => {
@@ -7,14 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const lineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: data.labels, // Label dari response JSON
+                    labels: data.labels, 
                     datasets: [{
                         label: 'Performa',
-                        data: data.data, // Data dari response JSON
-                        borderColor: '#2563EB', // Warna garis
-                        backgroundColor: 'rgba(37, 99, 235, 0.2)', // Warna area di bawah garis
+                        data: data.data, 
+                        borderColor: '#2563EB', 
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)', 
                         fill: true,
-                        tension: 0.4, // Memberikan efek kurva pada garis
+                        tension: 0.4, 
                         pointBackgroundColor: '#1E40AF',
                         pointBorderColor: '#2563EB',
                         pointRadius: 5

@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-require '../database.php'; // Jalur diperbarui untuk mengakses database.php dari folder tes
+require '../database.php'; 
 
 $userId = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
@@ -26,7 +26,6 @@ $stmt = $conn->prepare("
 $stmt->execute(['user_id' => $userId]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Set nilai total views dan likes
 $totalViews = $result['total_views'] ?? 0;
 $totalLikes = $result['total_likes'] ?? 0;
 
@@ -49,23 +48,7 @@ $totalLikes = $result['total_likes'] ?? 0;
       </div>
       <h3>Dashboard</h3>
       <ul>
-        <?php if ($_SESSION['role'] === 'admin'): ?>
-        <!-- Menu untuk admin -->
-        <li><a id="profil" href="admin.php">Profil</a></li>
-        <li><a id="verifikasiArtikel" href="verifikasi.php">Verifikasi Artikel</a></li>
-        <li><a id="hapusArtikel" href="hapus_artikel.php">Hapus Artikel</a></li>
-        <li><a id="daftarAkun" href="daftar_akun.php">Daftar Akun</a></li>
-        <li><a id="formulirPenulis" href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a id="artikelBaru" href="artikel_baru.php">Artikel Baru</a></li>
-        <li><a id="editArtikel" href="edit_artikel.php">Edit Artikel</a></li>
-        <?php elseif ($_SESSION['role'] === 'penulis'): ?>
-        <!-- Menu untuk penulis -->
         <li><a id="profil" href="Profile.php">Profile</a></li>
-        <li><a id="tambahArtikel" href="Tambah.php">Tambah Artikel</a></li>
-        <li><a id="editArtikel" href="edit_artikel.php">Edit Artikel</a></li>
-        <li><a id="artikelSaya" href="artikel_saya.php">Artikel Saya</a></li>
-        <li><a id="hapusArtikel" href="hapus_artikel.php">Hapus Artikel</a></li>
-        <?php endif; ?>
       </ul>
     <a href="../logout.php" class="logout">Logout</a>
   </aside>
@@ -80,16 +63,6 @@ $totalLikes = $result['total_likes'] ?? 0;
         </div>
         <div class="edit-like-view">
           <button>EDIT PROFIL</button>
-          <div class="like-view-card">
-            <div class="like-view">
-              <p class="jumlah" id="jumlah-like"><?= $totalLikes; ?></p>
-              <p class="keterangan" id="keterangan-like">LIKE</p>
-            </div>
-            <div class="like-view">
-              <p class="jumlah" id="jumlah-view"><?= $totalViews; ?></p>
-              <p class="keterangan" id="keterangan-view">VIEWERS</p>
-            </div>
-          </div>
         </div>
       </div>
       <div class="profile-nama">
@@ -109,14 +82,7 @@ $totalLikes = $result['total_likes'] ?? 0;
         </div>
       </div> 
     </div>
-    <div class="chart-container">
-      <h2>Performa Konten</h2>
-      <canvas id="lineChart"></canvas>
-    </div>
   </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="chart.js"></script> 
 </body>
 </html>

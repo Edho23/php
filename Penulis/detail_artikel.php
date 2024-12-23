@@ -8,11 +8,11 @@ if (!isset($_GET['id'])) {
 
 $articleId = $_GET['id'];
 
-// Tingkatkan jumlah views
+
 $stmt = $conn->prepare("UPDATE articles SET views = views + 1 WHERE id = :id");
 $stmt->execute(['id' => $articleId]);
 
-// Ambil data artikel
+
 $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");
 $stmt->execute(['id' => $articleId]);
 $article = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -7,8 +7,8 @@ document.getElementById('add-article-form').addEventListener('submit', function 
   
     if (title && content && category) {
       alert('Artikel berhasil ditambahkan!');
-      // Di sini, Anda dapat menambahkan kode untuk mengirimkan data ke server
-      this.reset(); // Mengosongkan form setelah submit
+      
+      this.reset(); 
     } else {
       alert('Harap isi semua bidang yang wajib diisi.');
     }

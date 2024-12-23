@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Ambil daftar penulis dari database
 $stmt = $conn->prepare("SELECT id, nama_lengkap, email, nomor_hp, jenis_kelamin, role FROM users WHERE role = 'penulis' ORDER BY nama_lengkap ASC");
 $stmt->execute();
 $penulisList = $stmt->fetchAll(PDO::FETCH_ASSOC);

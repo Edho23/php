@@ -6,12 +6,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Ambil kategori untuk filter
+
 $stmt = $conn->prepare("SELECT DISTINCT kategori FROM articles WHERE is_verified = 0");
 $stmt->execute();
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Filter Berdasarkan Kategori
+
 $filter = isset($_GET['kategori']) ? $_GET['kategori'] : null;
 
 if ($filter) {
@@ -24,7 +24,7 @@ if ($filter) {
 
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Proses verifikasi artikel
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
     $section = $_POST['section'];
@@ -34,12 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
         die("Section tidak boleh kosong. Pilih section sebelum memverifikasi.");
     }
 
-    // Validasi kategori jika section adalah "semua-class"
+
     if ($section === 'semua-class' && empty($kategori)) {
         die("Harap pilih kategori untuk section 'semua-class'.");
     }
 
-    // Update artikel di database
+
     $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, kategori = :kategori WHERE id = :id");
     $stmt->execute([
         'id' => $articleId,
