@@ -16,17 +16,17 @@ $stmt->execute();
 $konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Query untuk konten-editor-pick
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'editor_pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
 $editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Query untuk story-war
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'story_war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'story-war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
 $stmt->execute();
 $storyWarArticle = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Query untuk semua-class
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua_class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
 $stmt->execute();
 $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -299,43 +299,45 @@ $allClassArticles = getAllClassArticles($conn);
             </div>
         </div>
         <div class="konten-editor-pick">
-            <h1><b>TERPO</b>PULER</h1>
-            <div class="kontainer">
-                <?php foreach ($editorPickArticles as $editorPick): ?>
-                <div class="card">
-                    <img src="assets/<?= htmlspecialchars($editorPick['gambar']); ?>" alt="" class="gambar-sisi">
-                    <div class="card-konten">
-                        <h3><?= htmlspecialchars($editorPick['judul']); ?></h3>
-                        <div class="penulis-tgl-konten">
-                            <label><?= date('d M Y', strtotime($editorPick['tanggal'])); ?></label>
-                            <label>by <b><?= htmlspecialchars($editorPick['penulis']); ?></b></label>
-                        </div>
+    <h1><b>TERPO</b>PULER</h1>
+    <?php foreach ($kontenEditorPickArticles as $article): ?>
+    <div class="kontainer">
+            <div class="card">
+                <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" alt="" class="gambar-sisi">
+                <div class="card-konten">
+                    <h3><?= htmlspecialchars($article['judul']); ?></h3>
+                    <div class="penulis-tgl-konten">
+                        <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
+                        <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
                     </div>
                 </div>
-                <?php endforeach; ?>
             </div>
-        </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 
-        <div class="story-war">
-            <?php if ($storyWarArticle): ?>
-            <div class="kontainer-story">
-                <div class="konten-kiri">
-                    <h1><b>STORY:</b> OTOMOTIF</h1>
-                    <p><b><?= htmlspecialchars($storyWarArticle['judul']); ?></b></p>
-                    <div class="tgl-penulis-story">
-                        <div class="nama-jabatan">
-                            <p class="nama-penulis">by <?= htmlspecialchars($storyWarArticle['penulis']); ?></p>
-                        </div>
-                        <p class="tgl-penulis"><?= date('d M Y', strtotime($storyWarArticle['tanggal'])); ?></p>
-                    </div>
-                    <p class="ringkasan-story-konten"><?= htmlspecialchars(substr($storyWarArticle['konten'], 0, 300)); ?>... <b>SELENGKAPNYA</b></p>
+
+        <?php if ($storyWarArticle): ?>
+<div class="story-war">
+    <div class="kontainer-story">
+        <div class="konten-kiri">
+            <h1><b>STORY:</b> OTOMOTIF</h1>
+            <p><b><?= htmlspecialchars($storyWarArticle['judul']); ?></b></p>
+            <div class="tgl-penulis-story">
+                <div class="nama-jabatan">
+                    <p class="nama-penulis">by <?= htmlspecialchars($storyWarArticle['penulis']); ?></p>
                 </div>
-                <div class="konten-kanan">
-                    <img src="assets/<?= htmlspecialchars($storyWarArticle['gambar']); ?>" alt="">
-                </div>
+                <p class="tgl-penulis"><?= date('d M Y', strtotime($storyWarArticle['tanggal'])); ?></p>
             </div>
-            <?php endif; ?>
+            <p class="ringkasan-story-konten"><?= htmlspecialchars(substr($storyWarArticle['konten'], 0, 300)); ?>... <b>SELENGKAPNYA</b></p>
         </div>
+        <div class="konten-kanan">
+            <img src="assets/<?= htmlspecialchars($storyWarArticle['gambar']); ?>" alt="">
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 
         <div class="semua-class">
             <h1><b>></b> LAINNYA</h1>

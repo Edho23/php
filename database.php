@@ -1,5 +1,5 @@
 <?php
-$host = '127.0.0.1:8111';
+$host = 'localhost';
 $dbname = 'news_management';
 $username = 'root'; // Sesuaikan dengan username database Anda
 $password = ''; // Sesuaikan dengan password database Anda
