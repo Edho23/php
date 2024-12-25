@@ -209,3 +209,60 @@ body {
   width: 100%;
   max-width: 200px; 
 }
+
+/* Target Page Dropdown Styling */
+.page-target-container {
+  display: none; /* Hidden by default */
+  margin-top: 1px;
+}
+
+.page-target-container .select-page-target {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%; /* Full width for dropdown */
+  max-width: 200px; /* Limit width */
+}
+
+/* Show Dropdown for Page Target */
+.page-target-container.show {
+  display: block; /* Display when visible */
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+/* Highlight Dropdown for Page Target */
+.page-target-container .select-page-target:focus {
+  border-color: #4CAF50;
+}
+
+/* Dropdown Error Message */
+.error-page-target {
+  color: #f44336;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: none; /* Initially hidden */
+}
+
+/* Show Error Message for Page Target */
+.error-page-target.active {
+  display: block; /* Visible when active */
+}
+
+/* Enhanced Dropdown for Both Containers */
+.select-section,
+.select-category,
+.select-page-target {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 200px;
+  transition: border-color 0.3s ease;
+}
+
+/* Focus State for Dropdown */
+.select-section:focus,
+.select-category:focus,
+.select-page-target:focus {
+  border-color: #FD5F00;
+}

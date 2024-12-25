@@ -6,12 +6,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-
+// Ambil kategori untuk filter
 $stmt = $conn->prepare("SELECT DISTINCT kategori FROM articles WHERE is_verified = 0");
 $stmt->execute();
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+// Filter Berdasarkan Kategori
 $filter = isset($_GET['kategori']) ? $_GET['kategori'] : null;
 
 if ($filter) {
@@ -24,26 +24,28 @@ if ($filter) {
 
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+// Proses verifikasi artikel
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
     $section = $_POST['section'];
+    $pageTarget = isset($_POST['page_target']) ? $_POST['page_target'] : null;
     $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
 
     if (empty($section)) {
         die("Section tidak boleh kosong. Pilih section sebelum memverifikasi.");
     }
 
-
+    // Jika section adalah 'semua-class', pastikan kategori dipilih
     if ($section === 'semua-class' && empty($kategori)) {
         die("Harap pilih kategori untuk section 'semua-class'.");
     }
 
-
-    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, kategori = :kategori WHERE id = :id");
+    // Update artikel
+    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, page_target = :page_target, kategori = :kategori WHERE id = :id");
     $stmt->execute([
         'id' => $articleId,
         'section' => $section,
+        'page_target' => $pageTarget,
         'kategori' => $kategori
     ]);
 
@@ -63,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
-    <div class="kembali-btn">
+      <div class="kembali-btn">
         <a href="../beranda.php"><button>Kembali</button></a>
       </div>
       <h3>Dashboard</h3>
@@ -108,6 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
             <th>Tanggal Dibuat</th>
             <th>Penulis</th>
             <th>Section</th>
+            <th>Target Page</th>
+            <th>Aksi</th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -140,6 +144,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
                       <option value="Budaya">Budaya</option>
                     </select>
                   </div>
+              </td>
+              <td>
+                  <select name="page_target" class="select-page-target">
+                    <option value="" disabled selected>Pilih Target Page</option>
+                    <option value="Beranda">Beranda</option>
+                    <option value="Bisnis">Bisnis</option>
+                    <option value="Keuangan">Keuangan</option>
+                    <option value="Olahraga">Olahraga</option>
+                    <option value="Internasional">Internasional</option>
+                    <option value="Budaya">Budaya</option>
+                  </select>
+              </td>
+              <td>
                   <button type="submit" class="btn btn-approve">Verifikasi</button>
                 </form>
               </td>

@@ -1,10 +1,21 @@
+<?php
+session_start();
+
+require '../database.php';
+
+// Memeriksa apakah pengguna telah login
+$loggedIn = isset($_SESSION['user_id']);
+$username = $loggedIn ? $_SESSION['username'] : '';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kategori - Internasional</title>
-    <link rel="stylesheet" href="Kinternasional.css">
+    <title>Kategori - Bisnis</title>
+    <link rel="stylesheet" href="Kbisnis.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
@@ -28,11 +39,11 @@
                         <button class="pencarian-btn"><b>Cari</b></button>
                     </div>
                     <a class="kategori" id="beranda" href="../beranda.php">BERANDA</a>
-                    <a class="kategori" id="bisnis" href="../Kategori-Page/Kbisnis.html">BISNIS</a>
-                    <a class="kategori" id="keuangan" href="../Kategori-Page/Kkeuangan.html">KEUANGAN</a>
-                    <a class="kategori" id="olahraga" href="../Kategori-Page/Kolahraga.html">OLAHRAGA</a>
-                    <a class="kategori" id="internasional" href="../Kategori-Page/Kinternasional.html">INTERNASIONAL</a>
-                    <a class="kategori" id="budaya" href="../Kategori-Page/Kbudaya.html">BUDAYA</a>
+                    <a class="kategori" id="bisnis" href="Kbisnis.php">BISNIS</a>
+                    <a class="kategori" id="keuangan" href="Kkeuangan.html">KEUANGAN</a>
+                    <a class="kategori" id="olahraga" href="Kolahraga.html">OLAHRAGA</a>
+                    <a class="kategori" id="internasional" href="Kinternasional.html">INTERNASIONAL</a>
+                    <a class="kategori" id="budaya" href="Kbudaya.html">BUDAYA</a>
                 </nav>
             </div>
             <div class="kanan-nav">
@@ -42,17 +53,21 @@
                     <div class="baris"></div>
                 </div>
                 <?php if ($loggedIn): ?>
-                <div class="loginAkun-btn">
-                    <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <a href="Admin/profile_admin.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil admin -->
-                    <?php elseif ($_SESSION['role'] === 'penulis'): ?>
-                    <a href="tes/profile.php"><img src="gambar/user.png" id="profil-icon" alt=""></a> <!-- Tautan ke profil penulis -->
-                    <?php endif; ?>
-                </div>
-                <?php else: ?>
-                <a href="pagelogin.html"><button id="login-btn">MASUK</button></a>
-                <a href="pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
-                        <?php endif; ?>
+					<div class="loginAkun-btn">
+						<?php if ($_SESSION['role'] === 'admin'): ?>
+						<a href="../Admin/profile_admin.php"><img src="../gambar/icons8-user-100.png" id="profil-icon" alt="" /></a>
+						<!-- Tautan ke profil admin -->
+						<?php elseif ($_SESSION['role'] === 'penulis'): ?>
+						<a href="../penulis/profile.php"><img src="../gambar/icons8-user-100.png" id="profil-icon" alt="" /></a>
+						<!-- Tautan ke profil penulis -->
+						<?php elseif ($_SESSION['role'] === 'pengguna'): ?>
+						<a href="../pengguna/profile_pengguna.php"><img src="../gambar/icons8-user-100.png" id="profil-icon" alt="" /></a>
+						<?php endif; ?>
+					</div>
+					<?php else: ?>
+					<a href="../pagelogin.html"><button id="login-btn">MASUK</button></a>
+					<a href="../pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
+					<?php endif; ?>
             </div>
         </div>
     </header>

@@ -8,9 +8,10 @@ $username = $loggedIn ? $_SESSION['username'] : '';
 require 'database.php'; // Koneksi database
 
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
 $stmt->execute();
-$konten1Article = $stmt->fetch(PDO::FETCH_ASSOC);
+$konten1ArticleBeranda = $stmt->fetch(PDO::FETCH_ASSOC);
+
 
 $stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
@@ -93,7 +94,7 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 							<button class="pencarian-btn"><b>Cari</b></button>
 						</div>
 						<a class="kategori" id="beranda" href="beranda.php">BERANDA</a>
-						<a class="kategori" id="bisnis" href="Kategori-Bisnis/Kbisnis.html">BISNIS</a>
+						<a class="kategori" id="bisnis" href="Kategori-Page/Kbisnis.php">BISNIS</a>
 						<a class="kategori" id="keuangan" href="keuangan.php">KEUANGAN</a>
 						<a class="kategori" id="olahraga" href="olahraga.php">OLAHRAGA</a>
 						<a class="kategori" id="internasional" href="internasional.php">INTERNASIONAL</a>
@@ -142,31 +143,31 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 			</div>
 			<div class="konten">
 				<div class="konten-1">
-					<?php if ($konten1Article): ?>
+					<?php if ($konten1ArticleBeranda): ?>
 					<div class="layout">
 						<div class="genre">
 							<!-- Tautan  menuju kategori -->
-							<a href="kategori.php?kategori=<?= htmlspecialchars($konten1Article['kategori']); ?>">
-								<b><?= htmlspecialchars(strtoupper($konten1Article['kategori'])); ?></b>
+							<a href="kategori.php?kategori=<?= htmlspecialchars($$konten1ArticleBeranda['kategori']); ?>">
+								<b><?= htmlspecialchars(strtoupper($konten1ArticleBeranda['kategori'])); ?></b>
 							</a>
 						</div>
 						<div class="subjudul-konten">
 							<p class="judul-hotline">
 								<!-- Tautan  menuju artikel -->
-								<a href="penulis/artikel.php?id=<?= htmlspecialchars($konten1Article['id']); ?>">
-									<b><?= htmlspecialchars($konten1Article['judul']); ?></b>
+								<a href="penulis/artikel.php?id=<?= htmlspecialchars($konten1ArticleBeranda['id']); ?>">
+									<b><?= htmlspecialchars($konten1ArticleBeranda['judul']); ?></b>
 								</a>
 							</p>
 							<div class="penulis-tgl">
-								<label><?= date('d M Y', strtotime($konten1Article['tanggal'])); ?></label>
+								<label><?= date('d M Y', strtotime($konten1ArticleBeranda['tanggal'])); ?></label>
 								<label>
-									By <b><?= htmlspecialchars($konten1Article['penulis']); ?></b>
+									By <b><?= htmlspecialchars($konten1ArticleBeranda['penulis']); ?></b>
 								</label>
 							</div>
 							<div class="ringkasan">
 								<p>
-									<?= htmlspecialchars(substr($konten1Article['konten'], 0, 150)); ?>...
-									<a href="penulis/artikel.php?id=<?= htmlspecialchars($konten1Article['id']); ?>">
+									<?= htmlspecialchars(substr($konten1ArticleBeranda['konten'], 0, 150)); ?>...
+									<a href="penulis/artikel.php?id=<?= htmlspecialchars($konten1ArticleBeranda['id']); ?>">
 										<b>SELENGKAPNYA</b>
 									</a>
 								</p>
@@ -174,7 +175,7 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 						</div>
 					</div>
 					<div class="layout">
-						<img class="gambarHotline" src="assets/<?= htmlspecialchars($konten1Article['gambar']); ?>" alt="<?= htmlspecialchars($konten1Article['kategori']); ?>" />
+						<img class="gambarHotline" src="assets/<?= htmlspecialchars($konten1ArticleBeranda['gambar']); ?>" alt="<?= htmlspecialchars($konten1ArticleBeranda['kategori']); ?>" />
 					</div>
 					<?php else: ?>
 					<div class="layout">

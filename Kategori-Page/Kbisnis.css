@@ -248,10 +248,24 @@ main h1 b {
 /* Layout Terbaru */
 
 .konten-terbaru {
-  display: flex;
-  justify-content: center;
-  margin: 20px 20px;
-  margin-top: 20px;
+  display: flex; /* Mengatur item secara horizontal */
+  flex-wrap: nowrap; /* Mencegah artikel turun ke bawah */
+  margin: 0 10px;
+  gap: 20px; /* Jarak antar panel */
+  overflow-x: auto; /* Membuat scroll horizontal */
+  padding: 30px 20PX; /* Padding untuk memberi ruang di dalam kontainer */
+  scroll-behavior: smooth; /* Efek scroll halus */
+  background-color: #f9f9f9; /* Opsional: Latar belakang konten */
+}
+
+.panel {
+  flex: 0 0 auto; /* Ukuran panel tetap, tidak menyusut atau membesar */
+  width: 440px; /* Lebar tetap untuk setiap artikel */
+  border: 1px solid #ddd; /* Border ringan */
+  border-radius: 8px; /* Sudut membulat */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bayangan panel */
+  background-color: #fff; /* Latar belakang putih */
+  overflow: hidden; /* Hindari konten keluar dari panel */
 }
 
 p.terbaru b {
@@ -267,15 +281,6 @@ p.terbaru {
   margin-left: 20px;
   border-left: 5px solid #FD5F00;
 }
-
-.konten-terbaru .panel {
-  width: 500px;
-  height: 400px;
-  margin: 0 20px;
-  background-color: #E7E7E7;
-  border-radius: 5px;
-  transition: all 0.3s ease;
-} 
 
 .konten-terbaru .panel:hover {
   cursor: pointer;
