@@ -13,33 +13,34 @@ $stmt->execute();
 $konten1ArticleBeranda = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
 $konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
 $editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'story-war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'story-war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
 $stmt->execute();
 $storyWarArticle = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $selectedCategory = isset($_GET['kategori']) ? $_GET['kategori'] : null;
 
 if ($selectedCategory) {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua-class' AND is_verified = 1 AND kategori = :kategori ORDER BY tanggal DESC");
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 AND kategori = :kategori ORDER BY tanggal DESC");
     $stmt->execute(['kategori' => $selectedCategory]);
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC");
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC");
     $stmt->execute();
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
 function getArticlesByCategory($conn, $kategori) {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
     $stmt->execute(['kategori' => $kategori]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -52,7 +53,7 @@ $budayaArticles = getArticlesByCategory($conn, 'Budaya');
 
 
 function getTrendingArticles($conn, $kategori) {
-    $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE kategori = :kategori ORDER BY views DESC LIMIT 5");
+    $stmt = $conn->prepare("SELECT id, judul FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' ORDER BY views DESC LIMIT 5");;
     $stmt->execute(['kategori' => $kategori]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

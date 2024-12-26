@@ -362,17 +362,19 @@ p.judul-pilihan-untukmu b {
 }
 
 .panel-pilihan-untukmu img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
-  object-fit: cover;
+  width: 100%; /* Memastikan gambar mengisi penuh panel */
+  height: 200px; /* Tinggi gambar */
+  object-fit: cover; /* Memastikan gambar proporsional */
 }
 
-.subjudul-pilihan-untukmu {
+.subjudul-pilihan-untukmu a {
   font-size: 16px;
   text-align: center;
   margin: 10px 0;
   color: #333;
+}
+.subjudul-pilihan-untukmu a{
+  text-decoration: none;
 }
 
 .panel-pilihan-untukmu p.subjudul-pilihan-untukmu:hover {

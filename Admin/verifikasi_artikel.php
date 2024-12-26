@@ -109,9 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
             <th>Kategori</th>
             <th>Tanggal Dibuat</th>
             <th>Penulis</th>
-            <th>Section</th>
             <th>Target Page</th>
-            <th>Aksi</th>
+            <th>Section</th>
+            <th>Kategori</th>
+            <th>Verifikasi</th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -126,15 +127,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
               <td>
                 <form method="POST" action="verifikasi_artikel.php" class="verifikasi-form">
                   <input type="hidden" name="article_id" value="<?= $article['id']; ?>">
-                  <select name="section" class="select-section" onchange="toggleKategori(this)" required>
-                    <option value="" disabled selected>Pilih Section</option>
-                    <option value="konten-1">Konten 1</option>
-                    <option value="konten-2">Konten 2</option>
-                    <option value="konten-editor-pick">Konten Editor Pick</option>
-                    <option value="story-war">Story War</option>
-                    <option value="semua-class">Semua Class</option>
+                  <select name="page_target" class="select-page-target" onchange="updateSections(this)" required>
+                    <option value="" disabled selected>Pilih Target Page</option>
+                    <option value="Beranda">Beranda</option>
+                    <option value="Bisnis">Bisnis</option>
+                    <option value="Keuangan">Keuangan</option>
+                    <option value="Olahraga">Olahraga</option>
+                    <option value="Internasional">Internasional</option>
+                    <option value="Budaya">Budaya</option>
                   </select>
-                  <div class="kategori-container">
+              </td>
+              <td>
+                  <select name="section" class="select-section" required>
+                    <option value="" disabled selected>Pilih Section</option>
+                  </select>
+              </td>
+              <td>
+                  <div class="kategori-container" style="display: none;">
                     <select name="kategori" class="select-category">
                       <option value="" disabled selected>Pilih Kategori</option>
                       <option value="Bisnis">Bisnis</option>
@@ -146,23 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
                   </div>
               </td>
               <td>
-                  <select name="page_target" class="select-page-target">
-                    <option value="" disabled selected>Pilih Target Page</option>
-                    <option value="Beranda">Beranda</option>
-                    <option value="Bisnis">Bisnis</option>
-                    <option value="Keuangan">Keuangan</option>
-                    <option value="Olahraga">Olahraga</option>
-                    <option value="Internasional">Internasional</option>
-                    <option value="Budaya">Budaya</option>
-                  </select>
-              </td>
-              <td>
-                  <button type="submit" class="btn btn-approve">Verifikasi</button>
-                </form>
+                <button type="submit" class="btn btn-approve">Verifikasi</button>
               </td>
               <td>
                 <button class="btn btn-reject">Tolak</button>
               </td>
+              </form>
             </tr>
           <?php endforeach; ?>
         </tbody>

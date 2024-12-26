@@ -11,9 +11,14 @@ $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND 
 $stmt->execute();
 $konten1ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5 ");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 6 ");
 $stmt->execute();
 $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+ // Query untuk mengambil artikel berdasarkan kategori "Bisnis" untuk bagian "Pilihan Untukmu"
+ $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'pilihan-untukmu' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+ $stmt->execute();
+ $pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -148,41 +153,25 @@ $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					</div>
 					<?php endforeach; ?>
 				</div>
-            <p class="judul-pilihan-untukmu"><b>PILIHAN</b> UNTUKMU</p>
-            <div class="pilihan-untukmu">
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
+                <p class="judul-pilihan-untukmu"><b>PILIHAN</b> UNTUKMU</p>
+<div class="pilihan-untukmu">
+    <?php if (!empty($pilihanUntukmuArticles)): ?>
+        <?php foreach ($pilihanUntukmuArticles as $article): ?>
+            <div class="panel-pilihan-untukmu">
+                <img src="../assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
+                <p class="subjudul-pilihan-untukmu">
+                    <b><a href="../penulis/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><?= htmlspecialchars($article['judul']); ?></a></b>
+                </p>
+                <div class="tgl-jam-artikel">
+                    <label for=""><?= date('d M Y', strtotime($article['tanggal'])); ?>, </label>
+                    <label for=""><?= date('H:i', strtotime($article['tanggal'])); ?> WIB</label>
                 </div>
             </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Belum ada artikel untuk ditampilkan di bagian ini.</p>
+    <?php endif; ?>
+</div>
             <div class="konten-editor-pick">
                 <div class="kontainer">
                     <div class="gambar-kiri">
