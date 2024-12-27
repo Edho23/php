@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 require '../database.php';
 
@@ -26,30 +30,33 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Proses verifikasi artikel
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
-    $articleId = $_POST['article_id'];
-    $section = $_POST['section'];
-    $pageTarget = isset($_POST['page_target']) ? $_POST['page_target'] : null;
-    $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
+  $articleId = $_POST['article_id'];
+  $section = $_POST['section'];
+  $pageTarget = isset($_POST['page_target']) ? $_POST['page_target'] : null;
+  $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
 
-    if (empty($section)) {
-        die("Section tidak boleh kosong. Pilih section sebelum memverifikasi.");
-    }
+  // Validasi hanya untuk section "semua-class" dan page Beranda
+  if ($pageTarget === 'Beranda' && $section === 'semua-class' && empty($kategori)) {
+      die("Harap pilih kategori untuk section 'semua-class' pada Beranda.");
+  }
 
-    // Jika section adalah 'semua-class', pastikan kategori dipilih
-    if ($section === 'semua-class' && empty($kategori)) {
-        die("Harap pilih kategori untuk section 'semua-class'.");
-    }
+  // Jika kategori tidak diisi dan bukan "semua-class", gunakan kategori asli artikel
+  if (empty($kategori) && $section !== 'semua-class') {
+      $stmt = $conn->prepare("SELECT kategori FROM articles WHERE id = :id");
+      $stmt->execute(['id' => $articleId]);
+      $kategori = $stmt->fetchColumn();
+  }
 
-    // Update artikel
-    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, page_target = :page_target, kategori = :kategori WHERE id = :id");
-    $stmt->execute([
-        'id' => $articleId,
-        'section' => $section,
-        'page_target' => $pageTarget,
-        'kategori' => $kategori
-    ]);
+  // Update artikel
+  $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, page_target = :page_target, kategori = :kategori WHERE id = :id");
+  $stmt->execute([
+      'id' => $articleId,
+      'section' => $section,
+      'page_target' => $pageTarget,
+      'kategori' => $kategori
+  ]);
 
-    echo "<script>alert('Artikel berhasil diverifikasi!'); window.location.href='verifikasi_artikel.php';</script>";
+  echo "<script>alert('Artikel berhasil diverifikasi!'); window.location.href='verifikasi_artikel.php';</script>";
 }
 ?>
 
