@@ -43,7 +43,7 @@ function getArticlesByCategory($conn, $kategori) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$bisnisArticless = getArticlesByCategory($conn, 'Bisnis');
+$bisnisArticles = getArticlesByCategory($conn, 'Bisnis');
 $keuanganArticles = getArticlesByCategory($conn, 'Keuangan');
 $olahragaArticles = getArticlesByCategory($conn, 'Olahraga');
 $internasionalArticles = getArticlesByCategory($conn, 'Internasional');
