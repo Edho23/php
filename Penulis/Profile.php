@@ -102,7 +102,6 @@ $totalLikes = $result['total_likes'] ?? 0;
     </div>
   </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="chart.js"></script> 
 </body>

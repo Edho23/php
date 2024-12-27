@@ -178,6 +178,10 @@ main h1 b {
 .panel-flex-column .judul-konten h3 {
   font-size: 32px;
 }
+.panel-flex-column .judul-konten a {
+  color: #000;
+  text-decoration: none;
+}
 
 .panel-flex-column .judul-konten {
   transition: all 0.3s ease, box-shadow -.3s ease;
@@ -233,6 +237,11 @@ main h1 b {
 .konten-kanan-hotline p.subjudul-konten-kanan:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.konten-kanan-hotline p.subjudul-konten-kanan b a {
+  text-decoration: none;
+  color: #000;
 }
 
 .konten-kanan-hotline img {

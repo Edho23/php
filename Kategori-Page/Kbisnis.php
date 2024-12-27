@@ -98,7 +98,11 @@ $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p><?= htmlspecialchars($article['kategori']); ?></p>
                     </div>
                     <div class="judul-konten">
-                        <h3><?= htmlspecialchars($article['judul']); ?></h3>
+                        <h3>
+                            <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars($article['judul']); ?>
+                            </a>
+                        </h3>
                     </div>
                     <div class="tgl-penulis">
                         <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
@@ -107,7 +111,7 @@ $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="penjelasan-konten">
                         <p>
                             <?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...
-                            <a href="../tes/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b>SELENGKAPNYA</b></a>
+                            <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article['id']); ?>"><b>SELENGKAPNYA</b></a>
                         </p>
                     </div>
                 </div>
@@ -118,7 +122,13 @@ $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Artikel Samping -->
                 <div class="konten-kanan-hotline">
                     <img src="../assets/<?= htmlspecialchars($article['gambar']); ?>" alt="<?= htmlspecialchars($article['judul']); ?>">
-                    <p class="subjudul-konten-kanan"><b><?= htmlspecialchars($article['judul']); ?></b></p>
+                    <p class="subjudul-konten-kanan">
+                        <b>
+                            <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article['id']); ?>">
+                                <?= htmlspecialchars($article['judul']); ?>
+                            </a>
+                        </b>
+                    </p>
                     <div class="tgl-penulis-konten">
                         <label><?= date('d M Y', strtotime($article['tanggal'])); ?>,</label>
                         <label><?= date('H:i', strtotime($article['tanggal'])); ?> WIB</label>
@@ -130,6 +140,7 @@ $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p>Belum ada artikel yang tersedia untuk section ini.</p>
     <?php endif; ?>
 </div>
+
 
             <p class="terbaru"><b>TER</b>BARU</p>
             <div class="konten-terbaru">
