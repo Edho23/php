@@ -17,7 +17,6 @@ $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND
 $stmt->execute();
 $konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
 $editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,9 +37,8 @@ if ($selectedCategory) {
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
 function getArticlesByCategory($conn, $kategori) {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
     $stmt->execute(['kategori' => $kategori]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -343,7 +341,6 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 						</div>
 					</div>
 					<?php endif; ?>
-
 					<!-- Bagian Gambar Kanan -->
 					<div class="gambar-kanan">
 						<?php foreach (array_slice($editorPickArticles, 3) as $article): ?>
