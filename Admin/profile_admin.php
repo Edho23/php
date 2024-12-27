@@ -1,11 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header('Location: ../pagelogin.html'); // Redirect jika belum login atau bukan admin
+    header('Location: ../pagelogin.html'); 
     exit;
 }
 
-require '../database.php'; // Jalur diperbarui untuk mengakses database.php dari folder tes
+require '../database.php'; 
 
 $userId = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
@@ -17,7 +17,7 @@ if (!$user) {
     exit;
 }
 
-// Hitung total artikel yang telah diverifikasi oleh admin (opsional jika dibutuhkan)
+
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS total_verified 
     FROM articles 
@@ -26,7 +26,7 @@ $stmt = $conn->prepare("
 $stmt->execute(['user_id' => $userId]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Set nilai total artikel yang diverifikasi
+
 $totalVerified = $result['total_verified'] ?? 0;
 
 ?>
@@ -48,14 +48,14 @@ $totalVerified = $result['total_verified'] ?? 0;
       </div>
     <h3>Dashboard</h3>
       <ul>
-        <li><a href="profile_admin.php" class="active">Profil</a></li>
-        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
-        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
-        <li><a href="daftar_akun.php">Daftar Akun</a></li>
-        <li><a href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
-        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
-        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
+        <li class="profil"><a href="profile_admin.php" class="active">Profil</a></li>
+        <li class="verifikasi"><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li class="hapus"><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li class="daftarAkun"><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li class="formulir-penulis"><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li class="tambah-artikel"><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li class="edit-artikel"><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li class="semua-artikel"><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
     <a href="../logout.php" class="logout">Logout</a>
   </aside>

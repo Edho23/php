@@ -6,11 +6,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Proses hapus artikel
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
 
-    // Query untuk memastikan artikel ada
+
     $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");
     $stmt->execute(['id' => $articleId]);
     $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -19,14 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
         die("Artikel tidak ditemukan.");
     }
 
-    // Hapus artikel dari database
     $stmt = $conn->prepare("DELETE FROM articles WHERE id = :id");
     $stmt->execute(['id' => $articleId]);
 
     echo "<script>alert('Artikel berhasil dihapus!'); window.location.href='hapus_artikel_admin.php';</script>";
 }
 
-// Ambil daftar semua artikel
+
 $stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes, penulis FROM articles ORDER BY tanggal DESC");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -44,16 +43,19 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
+    <div class="kembali-btn">
+        <a href="../beranda.php"><button>Kembali</button></a>
+      </div>
       <h3>Dashboard</h3>
       <ul>
-        <li><a href="profile_admin.php" class="active">Profil</a></li>
-        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
-        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
-        <li><a href="daftar_akun.php">Daftar Akun</a></li>
-        <li><a href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
-        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
-        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
+        <li class="profil"><a href="profile_admin.php" class="active">Profil</a></li>
+        <li class="verifikasiArtikel"><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li class="hapusArtikel"><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li class="daftarAkun"><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li class="formulirPenulis"><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li class="tambahArtikel"><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li class="editArtikel"><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li class="semuaArtikel"><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
     </aside>

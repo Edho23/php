@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Ambil daftar penulis dari database
 $stmt = $conn->prepare("SELECT id, nama_lengkap, email, nomor_hp, jenis_kelamin, role FROM users WHERE role = 'penulis' ORDER BY nama_lengkap ASC");
 $stmt->execute();
 $penulisList = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -24,16 +23,19 @@ $penulisList = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
+    <div class="kembali-btn">
+        <a href="../beranda.php"><button>Kembali</button></a>
+      </div>
       <h3>Dashboard</h3>
       <ul>
-        <li><a href="profile_admin.php" class="active">Profil</a></li>
-        <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
-        <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
-        <li><a href="daftar_akun.php">Daftar Akun</a></li>
-        <li><a href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
-        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
-        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
+        <li class="profil"><a href="profile_admin.php" class="active">Profil</a></li>
+        <li class="verifikasiArtikel"><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
+        <li class="hapusArtikel"><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+        <li class="daftarAkun"><a href="daftar_akun.php">Daftar Akun</a></li>
+        <li class="formulirPenulis"><a href="form_penulis.php">Formulir Penulis</a></li>
+        <li class="tambahArtikel"><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li class="editArtikel"><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li class="semuaArtikel"><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
     </aside>

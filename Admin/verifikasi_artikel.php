@@ -28,22 +28,24 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
     $articleId = $_POST['article_id'];
     $section = $_POST['section'];
+    $pageTarget = isset($_POST['page_target']) ? $_POST['page_target'] : null;
     $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
 
     if (empty($section)) {
         die("Section tidak boleh kosong. Pilih section sebelum memverifikasi.");
     }
 
-    // Validasi kategori jika section adalah "semua-class"
+    // Jika section adalah 'semua-class', pastikan kategori dipilih
     if ($section === 'semua-class' && empty($kategori)) {
         die("Harap pilih kategori untuk section 'semua-class'.");
     }
 
-    // Update artikel di database
-    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, kategori = :kategori WHERE id = :id");
+    // Update artikel
+    $stmt = $conn->prepare("UPDATE articles SET is_verified = 1, section = :section, page_target = :page_target, kategori = :kategori WHERE id = :id");
     $stmt->execute([
         'id' => $articleId,
         'section' => $section,
+        'page_target' => $pageTarget,
         'kategori' => $kategori
     ]);
 
@@ -63,15 +65,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
+      <div class="kembali-btn">
+        <a href="../beranda.php"><button>Kembali</button></a>
+      </div>
       <h3>Dashboard</h3>
       <ul>
-          <li><a href="Profile_admin.php">Profil</a></li>
-          <li><a href="verifikasi_artikel.php" class="active">Verifikasi Artikel</a></li>
-          <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
-          <li><a href="daftar_akun.php">Daftar Akun</a></li>
-          <li><a href="form_penulis.php">Formulir Penulis</a></li>
-          <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
-          <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+          <li class="profil"><a href="Profile_admin.php">Profil</a></li>
+          <li class="verifikasiArtikel"><a href="verifikasi_artikel.php" class="active">Verifikasi Artikel</a></li>
+          <li class="hapusArtikel"><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
+          <li class="daftarAkun"><a href="daftar_akun.php">Daftar Akun</a></li>
+          <li class="formulirPenulis"><a href="form_penulis.php">Formulir Penulis</a></li>
+          <li class="tambahArtikel"><a href="Tambah_admin.php">Tambah Artikel</a></li>
+          <li class="editArtikel"><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+          <li class="semuaArtikel"><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
     </aside>
@@ -103,7 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
             <th>Kategori</th>
             <th>Tanggal Dibuat</th>
             <th>Penulis</th>
+            <th>Target Page</th>
             <th>Section</th>
+            <th>Kategori</th>
+            <th>Verifikasi</th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -118,15 +127,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
               <td>
                 <form method="POST" action="verifikasi_artikel.php" class="verifikasi-form">
                   <input type="hidden" name="article_id" value="<?= $article['id']; ?>">
-                  <select name="section" class="select-section" onchange="toggleKategori(this)" required>
-                    <option value="" disabled selected>Pilih Section</option>
-                    <option value="konten-1">Konten 1</option>
-                    <option value="konten-2">Konten 2</option>
-                    <option value="konten-editor-pick">Konten Editor Pick</option>
-                    <option value="story-war">Story War</option>
-                    <option value="semua-class">Semua Class</option>
+                  <select name="page_target" class="select-page-target" onchange="updateSections(this)" required>
+                    <option value="" disabled selected>Pilih Target Page</option>
+                    <option value="Beranda">Beranda</option>
+                    <option value="Bisnis">Bisnis</option>
+                    <option value="Keuangan">Keuangan</option>
+                    <option value="Olahraga">Olahraga</option>
+                    <option value="Internasional">Internasional</option>
+                    <option value="Budaya">Budaya</option>
                   </select>
-                  <div class="kategori-container">
+              </td>
+              <td>
+                  <select name="section" class="select-section" required>
+                    <option value="" disabled selected>Pilih Section</option>
+                  </select>
+              </td>
+              <td>
+                  <div class="kategori-container" style="display: none;">
                     <select name="kategori" class="select-category">
                       <option value="" disabled selected>Pilih Kategori</option>
                       <option value="Bisnis">Bisnis</option>
@@ -136,12 +153,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
                       <option value="Budaya">Budaya</option>
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-approve">Verifikasi</button>
-                </form>
+              </td>
+              <td>
+                <button type="submit" class="btn btn-approve">Verifikasi</button>
               </td>
               <td>
                 <button class="btn btn-reject">Tolak</button>
               </td>
+              </form>
             </tr>
           <?php endforeach; ?>
         </tbody>

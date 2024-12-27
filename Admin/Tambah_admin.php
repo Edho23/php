@@ -17,12 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $extraImage1 = null;
     $extraImage2 = null;
 
-    // Validasi input
+
     if (empty($title) || empty($category) || empty($content) || empty($fullContent) || empty($section)) {
         die("Harap isi semua bidang yang diperlukan.");
     }
 
-    // Upload gambar sampul
+
     $targetDir = "../assets/";
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0755, true);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Gambar sampul wajib diunggah.");
     }
 
-    // Upload gambar tambahan untuk layout2 dan layout3
+
     if ($layout === 'layout2' || $layout === 'layout3') {
         if (!empty($_FILES['gambar2']['name'])) {
             $extraImage1 = $targetDir . basename($_FILES['gambar2']['name']);
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Simpan artikel ke database
+
     $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout, section, status) 
                             VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout, :section, :status)");
     $stmt->execute([
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'author_id' => $_SESSION['user_id'],
         'layout' => $layout,
         'section' => $section,
-        'status' => 'approved' // Artikel langsung disetujui
+        'status' => 'approved' 
     ]);
 
     echo "<script>alert('Artikel berhasil ditambahkan dan disetujui!'); window.location.href='Tambah_admin.php';</script>";
@@ -113,9 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
         <li><a href="daftar_akun.php">Daftar Akun</a></li>
         <li><a href="form_penulis.php">Formulir Penulis</a></li>
-        <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
+        <li class="tambahArtikel"><a href="Tambah_admin.php">Tambah Artikel</a></li>
         <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
-        <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>>
+        <li class="semuaArtikel"><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
     </aside>

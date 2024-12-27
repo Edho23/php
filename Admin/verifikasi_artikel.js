@@ -1,10 +1,35 @@
-function toggleKategori(selectElement) {
-    const kategoriContainer = selectElement.closest('form').querySelector('.kategori-container');
+function updateSections(target) {
+    const sectionSelect = target.closest('tr').querySelector('.select-section');
+    const categoryContainer = target.closest('tr').querySelector('.kategori-container');
+    const selectedPage = target.value;
 
-    if (selectElement.value === 'semua-class') {
-        kategoriContainer.style.display = 'block';
+    // Clear existing options
+    sectionSelect.innerHTML = '<option value="" disabled selected>Pilih Section</option>';
+
+    // Populate options based on the selected page
+    let sections = [];
+    switch (selectedPage) {
+        case 'Beranda':
+            sections = ['konten-1', 'konten-2', 'konten-editor-pick', 'story-war', 'semua-class'];
+            break;
+        case 'Bisnis':
+            sections = ['konten-1', 'konten-2', 'pilihan-untukmu', 'konten-editor-pick', 'sorotan-class'];
+            break;
+        // Add more cases for other pages like Keuangan, Olahraga, etc.
+    }
+
+    // Add options to the section select
+    sections.forEach(section => {
+        const option = document.createElement('option');
+        option.value = section;
+        option.textContent = section;
+        sectionSelect.appendChild(option);
+    });
+
+    // Show or hide the category container based on the section
+    if (sections.includes('semua-class')) {
+        categoryContainer.style.display = 'block';
     } else {
-        kategoriContainer.style.display = 'none';
-        kategoriContainer.querySelector('select').value = ""; // Reset kategori
+        categoryContainer.style.display = 'none';
     }
 }

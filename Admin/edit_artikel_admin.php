@@ -6,16 +6,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     die("Akses ditolak. Harap login sebagai admin.");
 }
 
-// Ambil semua artikel dari database
+
 $stmt = $conn->prepare("SELECT id, judul, penulis FROM articles ORDER BY tanggal DESC");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Ambil artikel untuk diedit jika ada parameter article_id
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['article_id'])) {
     $articleId = $_GET['article_id'];
 
-    // Query untuk mendapatkan artikel berdasarkan ID
+
     $stmt = $conn->prepare("SELECT * FROM articles WHERE id = :id");
     $stmt->execute(['id' => $articleId]);
     $article = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['article_id'])) {
     }
 }
 
-// Proses update artikel
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $articleId = $_POST['article_id'];
     $title = $_POST['title'];
@@ -33,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category = $_POST['category'];
     $imagePath = $_POST['current_image'];
 
-    // Upload gambar baru jika ada
     if (!empty($_FILES['image']['name'])) {
         $targetDir = "../assets/";
         if (!is_dir($targetDir)) {
@@ -45,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Query update artikel
     $stmt = $conn->prepare("UPDATE articles SET judul = :judul, konten = :konten, kategori = :kategori, gambar = :gambar WHERE id = :id");
     $stmt->execute([
         ':judul' => $title,
@@ -71,15 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
+    <div class="kembali-btn">
+        <a href="../beranda.php"><button>Kembali</button></a>
+      </div>
       <h3>Dashboard</h3>
       <ul>
-        <li><a href="profile_admin.php" class="active">Profil</a></li>
+        <li class="profil"><a href="profile_admin.php" class="active">Profil</a></li>
         <li><a href="verifikasi_artikel.php">Verifikasi Artikel</a></li>
         <li><a href="hapus_artikel_admin.php">Hapus Artikel</a></li>
         <li><a href="daftar_akun.php">Daftar Akun</a></li>
         <li><a href="form_penulis.php">Formulir Penulis</a></li>
         <li><a href="Tambah_admin.php">Tambah Artikel</a></li>
-        <li><a href="edit_artikel_admin.php">Edit Artikel</a></li>
+        <li class="editArtikel"><a href="edit_artikel_admin.php">Edit Artikel</a></li>
         <li><a href="artikel_saya_admin.php">Semua Artikel</a></li>
       </ul>
       <a href="../logout.php" class="logout">Logout</a>
