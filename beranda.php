@@ -37,9 +37,8 @@ if ($selectedCategory) {
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
 function getArticlesByCategory($conn, $kategori) {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+    $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
     $stmt->execute(['kategori' => $kategori]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
