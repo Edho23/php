@@ -17,32 +17,6 @@ $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND
 $stmt->execute();
 $konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-<<<<<<< HEAD
-// Query untuk konten-editor-pick
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'editor_pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
-$stmt->execute();
-$editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Query untuk story-war
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'story_war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
-$stmt->execute();
-$storyWarArticle = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Query untuk semua-class
-$stmt = $conn->prepare("SELECT * FROM articles WHERE section = 'semua_class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
-$stmt->execute();
-$semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-$stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = 'Bisnis' AND is_verified = 1 ORDER BY views DESC LIMIT 1");
-$stmt->execute();
-$article = $stmt->fetch(PDO::FETCH_ASSOC); // Ambil artikel utama
-
-try {
-    // Query untuk mengambil semua artikel
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE is_verified = 1 ORDER BY tanggal DESC");
-=======
-
 $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
 $editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -59,7 +33,6 @@ if ($selectedCategory) {
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
     $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC");
->>>>>>> f599967766f15ea3193897f00178c324f4a3ee89
     $stmt->execute();
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -289,74 +262,6 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 								<?php
             $trendingInternasional = getTrendingArticles($conn, 'Internasional');
             if ($trendingInternasional): ?>
-<<<<<<< HEAD
-                <a href="tes/artikel.php?id=<?= $trendingInternasional[0]['id']; ?>">
-                    <?= htmlspecialchars($trendingInternasional[0]['judul']); ?>
-                </a>
-            <?php else: ?>
-                <a href="#">Tidak ada artikel trending</a>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-            </div>
-            <div class="konten-2">
-    <?php foreach ($konten2Articles as $article): ?>
-        <div class="panel">
-            <a href="tes/artikel.php?id=<?= $article['id']; ?>">
-                <img src="assets/<?= htmlspecialchars($article['gambar']); ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article['judul']); ?>">
-            </a>
-            <a href="tes/artikel.php?id=<?= $article['id']; ?>" class="judul-link">
-                <p class="subjudul-konten-2"><b><?= htmlspecialchars($article['judul']); ?></b></p>
-            </a>
-            <p class="ringkasan-konten-2"><?= htmlspecialchars(substr($article['konten'], 0, 150)); ?>...</p>
-            <div class="penulis-tgl-konten">
-                <label><?= date('d M Y', strtotime($article['tanggal'])); ?></label>
-                <label>by <b><?= htmlspecialchars($article['penulis']); ?></b></label>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-        </div>
-        <div class="konten-editor-pick">
-            <h1><b>TERPO</b>PULER</h1>
-            <div class="kontainer">
-                <?php foreach ($editorPickArticles as $editorPick): ?>
-                <div class="card">
-                    <img src="assets/<?= htmlspecialchars($editorPick['gambar']); ?>" alt="" class="gambar-sisi">
-                    <div class="card-konten">
-                        <h3><?= htmlspecialchars($editorPick['judul']); ?></h3>
-                        <div class="penulis-tgl-konten">
-                            <label><?= date('d M Y', strtotime($editorPick['tanggal'])); ?></label>
-                            <label>by <b><?= htmlspecialchars($editorPick['penulis']); ?></b></label>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <div class="story-war">
-            <?php if ($storyWarArticle): ?>
-            <div class="kontainer-story">
-                <div class="konten-kiri">
-                    <h1><b>STORY:</b> OTOMOTIF</h1>
-                    <p><b><?= htmlspecialchars($storyWarArticle['judul']); ?></b></p>
-                    <div class="tgl-penulis-story">
-                        <div class="nama-jabatan">
-                            <p class="nama-penulis">by <?= htmlspecialchars($storyWarArticle['penulis']); ?></p>
-                        </div>
-                        <p class="tgl-penulis"><?= date('d M Y', strtotime($storyWarArticle['tanggal'])); ?></p>
-                    </div>
-                    <p class="ringkasan-story-konten"><?= htmlspecialchars(substr($storyWarArticle['konten'], 0, 300)); ?>... <b>SELENGKAPNYA</b></p>
-                </div>
-                <div class="konten-kanan">
-                    <img src="assets/<?= htmlspecialchars($storyWarArticle['gambar']); ?>" alt="">
-                </div>
-            </div>
-            <?php endif; ?>
-        </div>
-=======
 								<a href="penulis/artikel.php?id=<?= $trendingInternasional[0]['id']; ?>">
 									<?= htmlspecialchars($trendingInternasional[0]['judul']); ?>
 								</a>
@@ -437,8 +342,6 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 						</div>
 					</div>
 					<?php endif; ?>
->>>>>>> f599967766f15ea3193897f00178c324f4a3ee89
-
 					<!-- Bagian Gambar Kanan -->
 					<div class="gambar-kanan">
 						<?php foreach (array_slice($editorPickArticles, 3) as $article): ?>
