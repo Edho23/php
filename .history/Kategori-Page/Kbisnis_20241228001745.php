@@ -172,7 +172,7 @@ $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p>Belum ada artikel untuk ditampilkan di bagian ini.</p>
     <?php endif; ?>
 </div>
-            <div class="konten-editor-pick-bisnis">
+            <div class="konten-editor-pick">
                 <div class="kontainer">
                     <div class="gambar-kiri">
                         <div class="card">

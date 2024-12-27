@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 a {
-    text-decoration: underline;
+    text-decoration: underline; /* Gaya global yang memengaruhi semua <a> */
 }
 
 header {
@@ -36,8 +36,8 @@ header {
 
 nav {
     display: flex;
-    margin-left: 220px;
     align-items: center;
+    margin-left: 220px;
 }
 
 header nav a {
@@ -48,7 +48,6 @@ header nav a {
     font-optical-sizing: auto;
     font-weight: 600;
     font-style: normal;
-    text-align: center;
 }
 
 header .kategori:hover {
@@ -103,7 +102,6 @@ header #login-btn:active, #daftar-btn, #logout-btn:active, .loginAkun-btn button
 
 .article {
     padding: 20px;
-    margin-top: 20px;
 }
 
 .article .container {
