@@ -556,13 +556,13 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 							<a href="#">
 								<img alt="Facebook logo" height="24" src="gambar/logos_facebook.png" width="24" />
 							</a>
-							<a href="#">
+							<a href="https://github.com/novalArd">
 								<img alt="Github logo" height="24" src="gambar/download 111(1).png" width="24" />
 							</a>
 							<a href="#">
 								<img alt="X logo" height="24" src="gambar/download 22(1).png" width="24" />
 							</a>
-							<a href="#">
+							<a href="https://www.instagram.com/_edhoooo/">
 								<img alt="Instagram logo" height="24" src="gambar/skill-icons_instagram.png" width="24" />
 							</a>
 						</div>

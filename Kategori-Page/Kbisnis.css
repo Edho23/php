@@ -505,66 +505,88 @@ p.judul-pilihan-untukmu b {
 
 .sorotan-class p.sorotan-judul {
   padding-left: 5px;
-  font-size: 20px;
-  margin-bottom: 10px;
-  margin-top: 50px;
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-top: 30px;
   margin-left: 20px;
-  border-left: 5px solid #FD5F00;
+  border-left: 5px solid #FD5F00; /* Garis oranye */
+  font-weight: bold;
 }
 
 .sorotan-class p.sorotan-judul b {
   color: #FD5F00;
 }
 
-.grid-card-sorotan .subjudul-view-like p {
-  margin-top: 10px;
-  font-size: 20px;
-}
-
+/* Grid Container */
 .grid-conten-sorotan {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 25px;
-  margin: 0px 25px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+  gap: 20px; /* Jarak antar kartu */
+  margin: 0 25px;
 }
 
-.grid-card-sorotan img.gambar-konten-sorotan {
-  width: 100%;
-  border-radius: 5px;
+/* Kartu */
+.grid-card-sorotan {
+  display: flex;
+  flex-direction: row; /* Gambar dan teks berdampingan */
+  align-items: center; /* Vertikal sejajar */
+  gap: 15px; /* Jarak antara gambar dan teks */
+  background-color: #fff;
+  padding: 10px; /* Padding dalam kartu */
+  border-radius: 8px; /* Sudut membulat */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Bayangan */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Efek hover */
 }
 
 .grid-card-sorotan:hover {
-  cursor: pointer;
-  color: #005792;
+  transform: translateY(-3px); /* Naik sedikit saat hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Efek bayangan */
 }
 
 .grid-card-sorotan:hover img {
-  filter: brightness(0.8);
+  filter: brightness(0.9); /* Gambar sedikit lebih gelap */
 }
 
+/* Gambar di Kartu */
+.grid-card-sorotan img.gambar-konten-sorotan {
+  width: 100px; /* Lebar gambar tetap */
+  height: 100px; /* Tinggi gambar tetap */
+  object-fit: cover; /* Gambar tidak terdistorsi */
+  border-radius: 5px; /* Sudut membulat */
+}
+
+/* Konten Teks di Kartu */
+.grid-card-sorotan .subjudul-view-like {
+  flex: 1; /* Teks memenuhi ruang yang tersedia */
+}
+
+.grid-card-sorotan .subjudul-view-like p {
+  margin: 0 0 8px; /* Margin atas dan bawah untuk teks */
+  font-size: 16px; /* Ukuran teks judul */
+  font-weight: bold; /* Judul ditebalkan */
+  color: #333; /* Warna teks */
+}
+
+/* Statistik View dan Like */
 .view-like {
-  margin-top: 10px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 15px; /* Jarak antara view dan like */
+  font-size: 14px; /* Ukuran teks statistik */
+  color: #666; /* Warna teks */
+}
+.view-like .view, .view-like .like {
+  display: flex; /* Mengatur tata letak view dan like */
+  align-items: center; /* Ikon dan angka sejajar secara vertikal */
+  gap: 5px; /* Jarak antara ikon dan angka */
 }
 
 .view-like img {
-  height: 20px;
-  width: auto;
+  height: 18px; /* Tinggi ikon */
+  width: 18px; /* Lebar ikon */
+  display: block;
 }
 
-.view-like .view, .view-like .like {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.view-like label {
-  font-size: 14px;
-  color: #333;
-} 
 
 /* Style Footer */
 .konten-footer {
