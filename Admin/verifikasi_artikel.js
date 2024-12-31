@@ -15,7 +15,9 @@ function updateSections(target) {
         case 'Bisnis':
             sections = ['konten-1', 'konten-2', 'pilihan-untukmu', 'konten-editor-pick', 'sorotan-class'];
             break;
-        // Add more cases for other pages like Keuangan, Olahraga, etc.
+        case 'Keuangan':
+            sections = ['konten-1', 'konten-2','pilihan-untukmu', 'konten-editor-pick', 'sorotan-class'];
+            break;
     }
 
     // Add options to the section select

@@ -6,48 +6,45 @@ $username = $loggedIn ? $_SESSION['username'] : '';
 
 require '../database.php';
 
-// Query untuk mengambil artikel untuk section "konten-1" dan kategori "Bisnis"
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Keuangan' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC");
 $stmt->execute();
-$konten1ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$konten1ArticlesKeuangan = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 6 ");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'keuangan' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 6 ");
 $stmt->execute();
-$konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$konten2Articleskeuangan = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
- // Query untuk mengambil artikel berdasarkan kategori "Bisnis" untuk bagian "Pilihan Untukmu"
- $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'pilihan-untukmu' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+
+ $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Keuangan' AND section = 'pilihan-untukmu' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
  $stmt->execute();
  $pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
- // Query untuk mengambil artikel dari section konten-editor-pick untuk page "Bisnis"
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Keuangan' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
 $stmt->execute();
-$editorPickBisnisArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$editorPickKeuanganArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$mainArticle = !empty($editorPickBisnisArticles) ? array_shift($editorPickBisnisArticles) : null;
+$mainArticle = !empty($editorPickKeuanganArticles) ? array_shift($editorPickKeuanganArticles) : null;
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'sorotan-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Keuangan' AND section = 'sorotan-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
 $stmt->execute();
 $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kategori - Bisnis</title>
-    <link rel="stylesheet" href="Kbisnis.css">
+    <title>Kategori - Keuangan</title>
+    <link rel="stylesheet" href="Kkeuangan.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wdth,wght@75,700&family=Public+Sans:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
     <header>
@@ -55,7 +52,7 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="left-section">
                 <div class="logo">
                     <a href="beranda.php">
-                        <img src="../gambar/LOGOO.png" alt="Logo">
+                        <img src="../gambar/LOGOO.png" alt="">
                     </a>
                 </div>
                 <nav id="navMenu" class="hidden">
@@ -105,10 +102,11 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </header>
     <main>
-        <h1><b>BIS</b>NIS</h1>
+        <h1><b>KEUA</b>NGAN</h1>
+        <div class="container">
         <div class="konten1-flex">
-            <?php if (!empty($konten1ArticlesBisnis)): ?>
-                <?php foreach ($konten1ArticlesBisnis as $index => $article): ?>
+            <?php if (!empty($konten1ArticlesKeuangan)): ?>
+                <?php foreach ($konten1ArticlesKeuangan as $index => $article): ?>
                     <?php if ($index === 0): ?>
                         <div class="panel-flex-column">
                             <div class="genre">
@@ -160,7 +158,7 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <p class="terbaru"><b>TER</b>BARU</p>
         <div class="konten-terbaru">
-            <?php foreach ($konten2ArticlesBisnis as $article): ?>
+            <?php foreach ($konten2Articleskeuangan as $article): ?>
                 <div class="panel">
                     <a href="penulis/artikel.php?id=<?= $article["id"] ?>">
                         <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article["judul"]) ?>">
@@ -203,10 +201,10 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <p>Belum ada artikel untuk ditampilkan di bagian ini.</p>
             <?php endif; ?>
         </div>
-        <div class="konten-editor-pick-bisnis">
+        <div class="konten-editor-pick-keuangan">
             <div class="kontainer">
                 <div class="gambar-kiri">
-                    <?php foreach (array_slice($editorPickBisnisArticles, 0, 2) as $article): ?>
+                    <?php foreach (array_slice($editorPickKeuanganArticles, 0, 2) as $article): ?>
                         <div class="card">
                             <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>" class="gambar-sisi">
                             <div class="card-konten">
@@ -250,7 +248,7 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p>Belum ada artikel untuk ditampilkan di bagian utama.</p>
                 <?php endif; ?>
                 <div class="gambar-kanan">
-                    <?php foreach (array_slice($editorPickBisnisArticles, 2, 2) as $article): ?>
+                    <?php foreach (array_slice($editorPickKeuanganArticles, 2, 2) as $article): ?>
                         <div class="card">
                             <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>" class="gambar-sisi">
                             <div class="card-konten">
@@ -302,11 +300,12 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endif; ?>
             </div>
         </div>
+        </div>
     </main>
     <footer>
         <div class="konten-footer">
             <div class="bagian-kiri">
-                <img src="../gambar/LOGOO.png" alt="Logo">
+                <img src="../gambar/LOGOO.png" alt="">
                 <p>News360 adalah pusat informasi dan portal berita digital yang menghadirkan informasi terkini dari berbagai penjuru dunia dalam genggaman Anda.</p>
             </div>
             <div class="footer-tengah">
@@ -327,23 +326,22 @@ $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="#">088201012020</a>
                     <div class="gambar-sosmed">
                         <a href="#">
-                            <img alt="Facebook logo" height="24" src="../gambar/logos_facebook.png" width="24" />
-                        </a>
-                        <a href="#">
-                            <img alt="Github logo" height="24" src="../gambar/download 111(1).png" width="24" />
-                        </a>
-                        <a href="#">
-                            <img alt="X logo" height="24" src="../gambar/download 22(1).png" width="24" />
-                        </a>
-                        <a href="#">
-                            <img alt="Instagram logo" height="24" src="../gambar/skill-icons_instagram.png" width="24" />
-                        </a>
+                            <img alt="Facebook logo" height="24" src="../gambar/logos_facebook.png" width="24"/>
+                           </a>
+                           <a href="#">
+                            <img alt="Github logo" height="24" src="../gambar/download 111(1).png" width="24"/>
+                           </a>
+                           <a href="#">
+                            <img alt="X logo" height="24" src="../gambar/download 22(1).png" width="24"/>
+                           </a>
+                           <a href="#">
+                            <img alt="Instagram logo" height="24" src="../gambar/skill-icons_instagram.png" width="24"/>
+                           </a>
                     </div>
-                </div>
+                </div>     
             </div>
         </div>
     </footer>
+    
 </body>
 </html>
-
-    
