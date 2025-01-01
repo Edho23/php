@@ -1,12 +1,23 @@
 <?php
 session_start();
-
-require '../database.php';
-
 // Memeriksa apakah pengguna telah login
 $loggedIn = isset($_SESSION['user_id']);
 $username = $loggedIn ? $_SESSION['username'] : '';
+require '../database.php';
 
+// Query untuk mengambil artikel untuk section "konten-1" dan kategori "Bisnis"
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Internasional' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC");
+$stmt->execute();
+$konten1ArticlesInternasional = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Internasional' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 6 ");
+$stmt->execute();
+$konten2ArticlesInternasional = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+ // Query untuk mengambil artikel berdasarkan kategori "Internasional" untuk bagian "Pilihan Untukmu"
+ $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Internasional' AND section = 'pilihan-untukmu' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
+ $stmt->execute();
+ $pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -39,11 +50,11 @@ $username = $loggedIn ? $_SESSION['username'] : '';
                         <button class="pencarian-btn"><b>Cari</b></button>
                     </div>
                     <a class="kategori" id="beranda" href="../beranda.php">BERANDA</a>
-                    <a class="kategori" id="bisnis" href="Kbisnis.php">BISNIS</a>
-                    <a class="kategori" id="keuangan" href="Kkeuangan.html">KEUANGAN</a>
-                    <a class="kategori" id="olahraga" href="Kolahraga.html">OLAHRAGA</a>
-                    <a class="kategori" id="internasional" href="Kinternasional.html">INTERNASIONAL</a>
-                    <a class="kategori" id="budaya" href="Kbudaya.html">BUDAYA</a>
+                    <a class="kategori" id="bisnis" href="../Kategori-Page/Kbisnis.php">BISNIS</a>
+                    <a class="kategori" id="keuangan" href="../Kategori-Page/Kkeuangan.php">KEUANGAN</a>
+                    <a class="kategori" id="olahraga" href="../Kategori-Page/Kolahraga.php">OLAHRAGA</a>
+                    <a class="kategori" id="internasional" href="../Kategori-Page/Kinternasional.php">INTERNASIONAL</a>
+                    <a class="kategori" id="budaya" href="../Kategori-Page/Kbudaya.php">BUDAYA</a>
                 </nav>
             </div>
             <div class="kanan-nav">
@@ -53,85 +64,109 @@ $username = $loggedIn ? $_SESSION['username'] : '';
                     <div class="baris"></div>
                 </div>
                 <?php if ($loggedIn): ?>
-					<div class="loginAkun-btn">
-						<?php if ($_SESSION['role'] === 'admin'): ?>
-						<a href="../Admin/profile_admin.php"><img src="../gambar/icons8-user-100.png" id="profil-icon" alt="" /></a>
-						<!-- Tautan ke profil admin -->
-						<?php elseif ($_SESSION['role'] === 'penulis'): ?>
-						<a href="../penulis/profile.php"><img src="../gambar/icons8-user-100.png" id="profil-icon" alt="" /></a>
-						<!-- Tautan ke profil penulis -->
-						<?php elseif ($_SESSION['role'] === 'pengguna'): ?>
-						<a href="../pengguna/profile_pengguna.php"><img src="../gambar/icons8-user-100.png" id="profil-icon" alt="" /></a>
-						<?php endif; ?>
-					</div>
-					<?php else: ?>
-					<a href="../pagelogin.html"><button id="login-btn">MASUK</button></a>
-					<a href="../pageDaftar.html"><button id="daftar-btn">DAFTAR</button></a>
-					<?php endif; ?>
+                    <div class="loginAkun-btn">
+                        <?php if ($_SESSION["role"] === "admin"): ?>
+                            <a href="../Admin/profile_admin.php">
+                                <img src="../gambar/icons8-user-100.png" id="profil-icon" alt="Admin Profile">
+                            </a>
+                        <?php elseif ($_SESSION["role"] === "penulis"): ?>
+                            <a href="../penulis/profile.php">
+                                <img src="../gambar/icons8-user-100.png" id="profil-icon" alt="Penulis Profile">
+                            </a>
+                        <?php elseif ($_SESSION["role"] === "pengguna"): ?>
+                            <a href="../pengguna/profile_pengguna.php">
+                                <img src="../gambar/icons8-user-100.png" id="profil-icon" alt="Pengguna Profile">
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <a href="../pagelogin.html">
+                        <button id="login-btn">MASUK</button>
+                    </a>
+                    <a href="../pageDaftar.html">
+                        <button id="daftar-btn">DAFTAR</button>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
     <main>
         <h1><b>INTER</b>NASIONAL</h1>
         <div class="container">
-            <div class="konten1-flex" id="konten-1-internasional">
-                <div class="panel-flex-column">
-                    <div class="genre">
-                        <p>Ekonomi</p>
-                    </div>
-                    <div class="judul-konten">
-                        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque!</h3>
-                    </div>
-                    <div class="tgl-penulis">
-                        <label for="">5 May 2024 </label>
-                        <label for="">By Beyazit</label>
-                    </div>
-                    <div class="penjelasan-konten">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus laborum autem ab quis, blanditiis assumenda maxime fuga ex! Praesentium, doloribus? Minima architecto recusandae, ea quasi assumenda cupiditate tenetur iure amet libero? <b>SELENGKAPNYA.</b></p>
-                    </div>
-                </div>
-                <div class="img-ekonomi-hotline">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (3).png" alt="">
-                </div>
-                <div class="konten-kanan-hotline">
-                    <img src="../gambar/websiteplanet-dummy-820X500 (1).png" alt="">
-                    <p class="subjudul-konten-kanan"><b>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsam.</b></p>
-                    <div class="tgl-penulis-konten">
-                        <label for="">25 May 2024,</label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-            </div>
+        <div class="konten1-flex">
+            <?php if (!empty($konten1ArticlesInternasional)): ?>
+                <?php foreach ($konten1ArticlesInternasional as $index => $article): ?>
+                    <?php if ($index === 0): ?>
+                        <div class="panel-flex-column">
+                            <div class="genre">
+                                <p><?= htmlspecialchars($article["kategori"]) ?></p>
+                            </div>
+                            <div class="judul-konten">
+                                <h3>
+                                    <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>">
+                                        <?= htmlspecialchars($article["judul"]) ?>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div class="tgl-penulis">
+                                <label><?= date("d M Y", strtotime($article["tanggal"])) ?></label>
+                                <label>By <?= htmlspecialchars($article["penulis"]) ?></label>
+                            </div>
+                            <div class="penjelasan-konten">
+                                <p>
+                                    <?= htmlspecialchars(substr($article["konten"], 0, 150)) ?>...
+                                    <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>">
+                                        <b>SELENGKAPNYA</b>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="img-ekonomi-hotline">
+                            <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>">
+                        </div>
+                    <?php else: ?>
+                        <div class="konten-kanan-hotline">
+                            <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>">
+                            <p class="subjudul-konten-kanan">
+                                <b>
+                                    <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>">
+                                        <?= htmlspecialchars($article["judul"]) ?>
+                                    </a>
+                                </b>
+                            </p>
+                            <div class="tgl-penulis-konten">
+                                <label><?= date("d M Y", strtotime($article["tanggal"])) ?>,</label>
+                                <label><?= date("H:i", strtotime($article["tanggal"])) ?> WIB</label>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel yang tersedia untuk section ini.</p>  
+            <?php endif; ?>
+        </div>
             <p class="terbaru"><b>TER</b>BARU</p>
-            <div class="konten-terbaru" id="konten-terbaru-internasional">
+            <div class="konten-terbaru">
+            <?php foreach ($konten2ArticlesInternasional as $article): ?>
                 <div class="panel">
-                    <img src="../gambar/websiteplanet-dummy-820X500 (2).png" alt="">
-                    <p class="subjudul-konten-2"><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium repellat rerum aliquid incidunt aliquam?</b></p>
-                    <p class="ringkasan-konten-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea error dolore modi eligendi optio maxime! Doloremque, et ullam.</p>
+                    <a href="penulis/artikel.php?id=<?= $article["id"] ?>">
+                        <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" id="gambar-konten2" alt="<?= htmlspecialchars($article["judul"]) ?>">
+                    </a>
+                    <a href="../penulis/artikel.php?id=<?= $article["id"] ?>" class="judul-link">
+                        <p class="subjudul-konten-2">
+                            <b><?= htmlspecialchars($article["judul"]) ?></b>
+                        </p>
+                    </a>
+                    <p class="ringkasan-konten-2">
+                        <?= htmlspecialchars(substr($article["konten"], 0, 150)) ?>...
+                    </p>
                     <div class="penulis-tgl-konten">
-                        <label for="">5 May 2024</label>
-                        <label for="">by <b>Ergin</b></label>
+                        <label><?= date("d M Y", strtotime($article["tanggal"])) ?></label>
+                        <label>by <b><?= htmlspecialchars($article["penulis"]) ?></b></label>
                     </div>
                 </div>
-                <div class="panel">
-                    <img src="../gambar/websiteplanet-dummy-820X500 (2).png" alt="">
-                    <p class="subjudul-konten-2"><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium repellat rerum aliquid incidunt aliquam?</b></p>
-                    <p class="ringkasan-konten-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea error dolore modi eligendi optio maxime! Doloremque, et ullam.</p>
-                    <div class="penulis-tgl-konten">
-                        <label for="">5 May 2024</label>
-                        <label for="">by <b>Ergin</b></label>
-                    </div>
-                </div>
-                <div class="panel">
-                    <img src="../gambar/websiteplanet-dummy-820X500 (2).png" alt="">
-                    <p class="subjudul-konten-2"><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium repellat rerum aliquid incidunt aliquam?</b></p>
-                    <p class="ringkasan-konten-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea error dolore modi eligendi optio maxime! Doloremque, et ullam.</p>
-                    <div class="penulis-tgl-konten">
-                        <label for="">5 May 2024</label>
-                        <label for="">by <b>Ergin</b></label>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
+        </div>
             <p class="judul-pilihan-untukmu"><b>PILIHAN</b> UNTUKMU</p>
             <div class="pilihan-untukmu" id="pilihan-untukmu-internasional">
                 <div class="panel-pilihan-untukmu">
