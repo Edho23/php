@@ -15,14 +15,26 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $filter = isset($_GET['kategori']) ? $_GET['kategori'] : null;
 
 if ($filter) {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE is_verified = 0 AND kategori = :kategori ORDER BY tanggal DESC");
-    $stmt->execute(['kategori' => $filter]);
+  $stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+      FROM articles 
+      JOIN users ON articles.author_id = users.id 
+      WHERE articles.is_verified = 0 
+        AND articles.kategori = :kategori 
+      ORDER BY articles.tanggal DESC
+  ");
+  $stmt->execute(['kategori' => $filter]);
 } else {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE is_verified = 0 ORDER BY tanggal DESC");
-    $stmt->execute();
+  $stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+      FROM articles 
+      JOIN users ON articles.author_id = users.id 
+      WHERE articles.is_verified = 0 
+      ORDER BY articles.tanggal DESC
+  ");
+  $stmt->execute();
 }
 
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Proses verifikasi artikel
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {

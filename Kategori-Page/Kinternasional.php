@@ -5,19 +5,73 @@ $loggedIn = isset($_SESSION['user_id']);
 $username = $loggedIn ? $_SESSION['username'] : '';
 require '../database.php';
 
-// Query untuk mengambil artikel untuk section "konten-1" dan kategori "Bisnis"
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Internasional' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC");
+// Query untuk "Konten-1" Internasional
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Internasional' 
+      AND articles.section = 'konten-1' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC
+");
 $stmt->execute();
 $konten1ArticlesInternasional = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Internasional' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 6 ");
+// Query untuk "Konten-2" Internasional
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Internasional' 
+      AND articles.section = 'konten-2' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 6
+");
 $stmt->execute();
 $konten2ArticlesInternasional = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
- // Query untuk mengambil artikel berdasarkan kategori "Internasional" untuk bagian "Pilihan Untukmu"
- $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Internasional' AND section = 'pilihan-untukmu' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
- $stmt->execute();
- $pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Query untuk "Pilihan Untukmu" Internasional
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Internasional' 
+      AND articles.section = 'pilihan-untukmu' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 4
+");
+$stmt->execute();
+$pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Query untuk "Editor Pick" Internasional
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Internasional' 
+      AND articles.section = 'konten-editor-pick' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 5
+");
+$stmt->execute();
+$editorPickInternasionalArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$mainArticle = !empty($editorPickInternasionalArticles) ? array_shift($editorPickInternasionalArticles) : null;
+
+// Query untuk "Sorotan Class" Internasional
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Internasional' 
+      AND articles.section = 'sorotan-class' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 8
+");
+$stmt->execute();
+$sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -168,232 +222,127 @@ $konten2ArticlesInternasional = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </div>
             <p class="judul-pilihan-untukmu"><b>PILIHAN</b> UNTUKMU</p>
-            <div class="pilihan-untukmu" id="pilihan-untukmu-internasional">
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
+            <div class="pilihan-untukmu">
+            <?php if (!empty($pilihanUntukmuArticles)): ?>
+                <?php foreach ($pilihanUntukmuArticles as $article): ?>
+                    <div class="panel-pilihan-untukmu">
+                        <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>">
+                        <p class="subjudul-pilihan-untukmu">
+                            <b>
+                                <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>">
+                                    <?= htmlspecialchars($article["judul"]) ?>
+                                </a>
+                            </b>
+                        </p>
+                        <div class="tgl-jam-artikel">
+                            <label><?= date("d M Y", strtotime($article["tanggal"])) ?>,</label>
+                            <label><?= date("H:i", strtotime($article["tanggal"])) ?> WIB</label>
+                        </div>
                     </div>
-                </div>
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-                <div class="panel-pilihan-untukmu">
-                    <img src="../gambar/websiteplanet-dummy-800X400 (1).png" alt="">
-                    <p class="subjudul-pilihan-untukmu"><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui?</b></p>
-                    <div class="tgl-jam-artikel">
-                        <label for="">5 May , </label>
-                        <label for="">19:21 WIB</label>
-                    </div>
-                </div>
-            </div>
-            <div class="konten-editor-pick" id="konten-editor-pick-internasional">
-                <div class="kontainer">
-                    <div class="gambar-kiri">
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Belum ada artikel untuk ditampilkan di bagian ini.</p>
+            <?php endif; ?>
+        </div>
+        <div class="konten-editor-pick-bisnis">
+            <div class="kontainer">
+                <div class="gambar-kiri">
+                    <?php foreach (array_slice($editorPickInternasionalArticles, 0, 2) as $article): ?>
                         <div class="card">
-                            <img src="../gambar/websiteplanet-dummy-820X500 (2).png" alt="" class="gambar-sisi">
+                            <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>" class="gambar-sisi">
                             <div class="card-konten">
-                                <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
+                                <h3>
+                                    <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>" style="text-decoration: none; color: inherit;">
+                                        <?= htmlspecialchars($article["judul"]) ?>
+                                    </a>
+                                </h3>
                                 <div class="penulis-tgl-konten">
-                                    <label for="">5 May 2024</label>
-                                    <label for="">by <b>Smith</b></label>
+                                    <label><?= date("d M Y", strtotime($article["tanggal"])) ?></label>
+                                    <label>by <b><?= htmlspecialchars($article["penulis"]) ?></b></label>
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <img src="../gambar/websiteplanet-dummy-800X500.png" alt="" class="gambar-sisi">
-                            <div class="card-konten">
-                                <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
-                                <div class="penulis-tgl-konten">
-                                    <label for="">5 May 2024</label>
-                                    <label for="">by <b>Adam</b></label>
-                                </div>
-                            </div>
-                        </div>   
-                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php if ($mainArticle): ?>
                     <div class="main-card">
-                        <img src="../gambar/websiteplanet-dummy-820X500 (3).png" alt="">
+                        <img src="../assets/<?= htmlspecialchars($mainArticle["gambar"]) ?>" alt="<?= htmlspecialchars($mainArticle["judul"]) ?>">
                         <div class="main-card-konten">
                             <div class="penulis-tgl-konten">
-                                <label for="">5 May 2024</label>
-                                <label for="">by <b>Louyi</b></label>
+                                <label><?= date("d M Y", strtotime($mainArticle["tanggal"])) ?></label>
+                                <label>by <b><?= htmlspecialchars($mainArticle["penulis"]) ?></b></label>
                             </div>
-                                <h2 class="subjudul-main-konten"><b>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Perspiciatis cupiditate officia velit!</b></h2>
-                                <p class="ringkasan-main-konten">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quia ipsam, Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum Lorem ipsum dolor sit. porro quo numquam consequuntur dolores voluptatem error ex odio. totam iste fugiat voluptate excepturi. <b>SELENGKAPNYA</b></p>
-                            </div>
-                        </div>
-                        <div class="gambar-kanan">
-                            <div class="card">
-                                <img src="../gambar/websiteplanet-dummy-800X400 (2).png" alt="" class="gambar-sisi">
-                                <div class="card-konten">
-                                    <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
-                                    <div class="penulis-tgl-konten">
-                                        <label for="">5 May 2024</label>
-                                        <label for="">by <b>Miya</b></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <img src="../gambar/websiteplanet-dummy-800X400 (3).png" alt="" class="gambar-sisi">
-                                <div class="card-konten">
-                                    <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h3>
-                                    <div class="penulis-tgl-konten">
-                                        <label for="">5 May 2024</label>
-                                        <label for="">by <b>David</b></label>
-                                    </div>
-                                </div>
-                            </div>
-                      </div>
-                 </div>
-            </div>
-            <div class="sorotan-class">
-                <p class="sorotan-judul"><b>SORO</b>TAN</p>
-                <div class="grid-conten-sorotan" id="sorotan-internasional">
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
+                            <h2 class="subjudul-main-konten">
+                                <b>
+                                    <a href="../penulis/artikel.php?id=<?= htmlspecialchars($mainArticle["id"]) ?>" style="text-decoration: none; color: inherit;">
+                                        <?= htmlspecialchars($mainArticle["judul"]) ?>
+                                    </a>
+                                </b>
+                            </h2>
+                            <p class="ringkasan-main-konten">
+                                <?= htmlspecialchars(substr($mainArticle["konten"], 0, 150)) ?>...
+                                <a href="../penulis/artikel.php?id=<?= htmlspecialchars($mainArticle["id"]) ?>">
+                                    <b>SELENGKAPNYA</b>
+                                </a>
+                            </p>
                         </div>
                     </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
+                <?php else: ?>
+                    <p>Belum ada artikel untuk ditampilkan di bagian utama.</p>
+                <?php endif; ?>
+                <div class="gambar-kanan">
+                    <?php foreach (array_slice($editorPickInternasionalArticles, 2, 2) as $article): ?>
+                        <div class="card">
+                            <img src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>" class="gambar-sisi">
+                            <div class="card-konten">
+                                <h3>
+                                    <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>" style="text-decoration: none; color: inherit;">
+                                        <?= htmlspecialchars($article["judul"]) ?>
+                                    </a>
+                                </h3>
+                                <div class="penulis-tgl-konten">
+                                    <label><?= date("d M Y", strtotime($article["tanggal"])) ?></label>
+                                    <label>by <b><?= htmlspecialchars($article["penulis"]) ?></b></label>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="" height="20px">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="" height="20px">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid-card-sorotan">
-                        <img class="gambar-konten-sorotan" src="../gambar/16-367x267.jpg" alt="">
-                        <div class="subjudul-view-like">
-                            <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta.</b></p>
-                            <div class="view-like">
-                                <div class="view">
-                                    <img src="../gambar/view.png" alt="">
-                                    <label for="">11.400</label>
-                                </div>
-                                <div class="like">
-                                    <img src="../gambar/mdi_like.png" alt="">
-                                    <label for="">500</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
+        </div>
+        <div class="sorotan-class">
+            <p class="sorotan-judul"><b>SORO</b>TAN</p>
+            <div class="grid-conten-sorotan" id="sorotan-bisnis">
+                <?php if (!empty($sorotanArticles)): ?>
+                    <?php foreach ($sorotanArticles as $article): ?>
+                        <div class="grid-card-sorotan">
+                            <img class="gambar-konten-sorotan" src="../assets/<?= htmlspecialchars($article["gambar"]) ?>" alt="<?= htmlspecialchars($article["judul"]) ?>">
+                            <div class="subjudul-view-like">
+                                <p>
+                                    <b>
+                                        <a href="../penulis/artikel.php?id=<?= htmlspecialchars($article["id"]) ?>">
+                                            <?= htmlspecialchars($article["judul"]) ?>
+                                        </a>
+                                    </b>
+                                </p>
+                                <div class="view-like">
+                                    <div class="view">
+                                        <img src="../gambar/view.png" alt="View" height="20px">
+                                        <label><?= htmlspecialchars($article["views"]) ?></label>
+                                    </div>
+                                    <div class="like">
+                                        <img src="../gambar/mdi_like.png" alt="Like" height="20px">
+                                        <label><?= htmlspecialchars($article["likes"]) ?></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Belum ada artikel yang tersedia untuk sorotan ini.</p>
+                <?php endif; ?>
+            </div>
+        </div>
         </div>
     </main>
     <footer>

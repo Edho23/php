@@ -154,7 +154,7 @@ main h1 b {
 
 .panel-flex-column .genre {
   margin-bottom: 10px;
-  background-color: #fd5f00;
+  background-color: #FD5F00;
   padding: 5px 10px;
   width: 100px;
   text-align: center;
@@ -180,9 +180,13 @@ main h1 b {
 .panel-flex-column .judul-konten h3 {
   font-size: 32px;
 }
+.panel-flex-column .judul-konten a {
+  color: #000;
+  text-decoration: none;
+}
 
 .panel-flex-column .judul-konten {
-  transition: all 0.3s ease, box-shadow -0.3s ease;
+  transition: all 0.3s ease, box-shadow -.3s ease;
 }
 
 .panel-flex-column .judul-konten:hover {
@@ -201,6 +205,10 @@ main h1 b {
 
 .penjelasan-konten {
   margin-top: 15px;
+}
+
+.penjelasan-konten p a {
+  text-decoration: none;
 }
 
 .penjelasan-konten {
@@ -235,6 +243,11 @@ main h1 b {
 .konten-kanan-hotline p.subjudul-konten-kanan:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.konten-kanan-hotline p.subjudul-konten-kanan b a {
+  text-decoration: none;
+  color: #000;
 }
 
 .konten-kanan-hotline img {

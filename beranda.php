@@ -8,34 +8,86 @@ $username = $loggedIn ? $_SESSION['username'] : '';
 require 'database.php'; // Koneksi database
 
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+// Query untuk "Konten-1" Beranda
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Beranda' 
+      AND articles.section = 'konten-1' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 1
+");
 $stmt->execute();
 $konten1ArticleBeranda = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+// Query untuk "Konten-2" Beranda
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Beranda' 
+      AND articles.section = 'konten-2' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 5
+");
 $stmt->execute();
 $konten2Articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+// Query untuk "Editor Pick" Beranda
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Beranda' 
+      AND articles.section = 'konten-editor-pick' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 5
+");
 $stmt->execute();
 $editorPickArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'story-war' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 1");
+// Query untuk "Story War" Beranda
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Beranda' 
+      AND articles.section = 'story-war' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 1
+");
 $stmt->execute();
 $storyWarArticle = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Query untuk "Semua Class" Beranda dengan filter kategori (jika ada)
 $selectedCategory = isset($_GET['kategori']) ? $_GET['kategori'] : null;
 
 if ($selectedCategory) {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 AND kategori = :kategori ORDER BY tanggal DESC");
+    $stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+        FROM articles 
+        JOIN users ON articles.author_id = users.id 
+        WHERE articles.page_target = 'Beranda' 
+          AND articles.section = 'semua-class' 
+          AND articles.is_verified = 1 
+          AND articles.kategori = :kategori 
+        ORDER BY articles.tanggal DESC
+    ");
     $stmt->execute(['kategori' => $selectedCategory]);
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC");
+    $stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+        FROM articles 
+        JOIN users ON articles.author_id = users.id 
+        WHERE articles.page_target = 'Beranda' 
+          AND articles.section = 'semua-class' 
+          AND articles.is_verified = 1 
+        ORDER BY articles.tanggal DESC
+    ");
     $stmt->execute();
     $semuaClassArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 function getArticlesByCategory($conn, $kategori) {
     $stmt = $conn->prepare("SELECT * FROM articles WHERE kategori = :kategori AND page_target = 'Beranda' AND section = 'semua-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");

@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 
-    $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, penulis, author_id, layout, is_verified) 
-                            VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :penulis, :author_id, :layout, :is_verified)");
+    $stmt = $conn->prepare("INSERT INTO articles (kategori, judul, konten, isi_artikel, gambar, gambar2, gambar3, tanggal, author_id, layout, is_verified) 
+                            VALUES (:kategori, :judul, :konten, :isi_artikel, :gambar, :gambar2, :gambar3, :tanggal, :author_id, :layout, :is_verified)");
     $stmt->execute([
         'kategori' => $category,
         'judul' => $title,
@@ -64,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'gambar2' => $extraImage1,
         'gambar3' => $extraImage2,
         'tanggal' => date('Y-m-d'),
-        'penulis' => $_SESSION['username'] ?? 'Penulis',
         'author_id' => $_SESSION['user_id'] ?? null,
         'layout' => $layout,
         'is_verified' => 0 

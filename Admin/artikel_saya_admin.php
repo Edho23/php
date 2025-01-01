@@ -7,9 +7,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 
-$stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes, penulis FROM articles ORDER BY tanggal DESC");
+$stmt = $conn->prepare("SELECT articles.id, 
+           articles.judul, 
+           articles.tanggal, 
+           articles.views, 
+           articles.likes, 
+           users.username AS penulis,
+           articles.author_id
+    FROM articles
+    JOIN users ON articles.author_id = users.id
+    ORDER BY articles.tanggal DESC
+");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>

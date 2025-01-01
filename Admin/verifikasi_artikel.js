@@ -18,6 +18,12 @@ function updateSections(target) {
         case 'Keuangan':
             sections = ['konten-1', 'konten-2','pilihan-untukmu', 'konten-editor-pick', 'sorotan-class'];
             break;
+        case 'Olahraga':
+            sections = ['konten-1', 'konten-2','pilihan-untukmu', 'konten-editor-pick', 'sorotan-class'];
+            break;
+        case 'Internasional':
+            sections = ['konten-1', 'konten-2','pilihan-untukmu', 'konten-editor-pick', 'sorotan-class'];
+            break;
     }
 
     // Add options to the section select

@@ -6,32 +6,71 @@ $username = $loggedIn ? $_SESSION['username'] : '';
 
 require '../database.php';
 
-// Query untuk mengambil artikel untuk section "konten-1" dan kategori "Bisnis"
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-1' AND is_verified = 1 ORDER BY tanggal DESC");
+// Query untuk "Konten-1" Bisnis
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Bisnis' 
+      AND articles.section = 'konten-1' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC
+");
 $stmt->execute();
 $konten1ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-2' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 6 ");
+// Query untuk "Konten-2" Bisnis
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Bisnis' 
+      AND articles.section = 'konten-2' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 6
+");
 $stmt->execute();
 $konten2ArticlesBisnis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
- // Query untuk mengambil artikel berdasarkan kategori "Bisnis" untuk bagian "Pilihan Untukmu"
- $stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'pilihan-untukmu' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 4");
- $stmt->execute();
- $pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Query untuk "Pilihan Untukmu" Bisnis
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Bisnis' 
+      AND articles.section = 'pilihan-untukmu' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 4
+");
+$stmt->execute();
+$pilihanUntukmuArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
- // Query untuk mengambil artikel dari section konten-editor-pick untuk page "Bisnis"
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'konten-editor-pick' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 5");
+// Query untuk "Editor Pick" Bisnis
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Bisnis' 
+      AND articles.section = 'konten-editor-pick' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 5
+");
 $stmt->execute();
 $editorPickBisnisArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $mainArticle = !empty($editorPickBisnisArticles) ? array_shift($editorPickBisnisArticles) : null;
 
-$stmt = $conn->prepare("SELECT * FROM articles WHERE page_target = 'Bisnis' AND section = 'sorotan-class' AND is_verified = 1 ORDER BY tanggal DESC LIMIT 8");
+// Query untuk "Sorotan Class" Bisnis
+$stmt = $conn->prepare("SELECT articles.*, users.username AS penulis 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    WHERE articles.page_target = 'Bisnis' 
+      AND articles.section = 'sorotan-class' 
+      AND articles.is_verified = 1 
+    ORDER BY articles.tanggal DESC 
+    LIMIT 8
+");
 $stmt->execute();
 $sorotanArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 
 ?>
 
