@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost';
+$host = 'localh';
 $dbname = 'news_management';
 $username = 'root'; 
 $password = ''; 
