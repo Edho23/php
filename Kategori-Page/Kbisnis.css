@@ -400,6 +400,11 @@ p.judul-pilihan-untukmu b {
   text-decoration: none;
 }
 
+p.subjudul-pilihan-untukmu {
+  padding: 10px 0;
+  text-align: center;
+}
+
 .panel-pilihan-untukmu p.subjudul-pilihan-untukmu:hover {
   text-decoration: underline;
 }
@@ -466,6 +471,10 @@ p.judul-pilihan-untukmu b {
 
 .main-card img {
   height: 350px;
+}
+
+.main-card p.ringkasan-main-konten a {
+  text-decoration: none;
 }
 
 .card img {

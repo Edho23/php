@@ -461,6 +461,10 @@ p.judul-pilihan-untukmu b {
     cursor: pointer;
   }
   
+  .main-card p.ringkasan-main-konten a {
+    text-decoration: none;
+  }
+  
   .main-card img {
     height: 350px;
   }
