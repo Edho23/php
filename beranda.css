@@ -130,16 +130,24 @@ header #login-btn:active,
 .pencarian-berita-beranda {
   margin: 0;
   display: flex;
+  align-items: flex-start; /* Menghindari pergeseran saat hasil muncul */
+  flex-direction: column; /* Atur elemen secara vertikal */
   margin-left: 25px;
   margin-right: 25px;
   margin-top: 50px;
   margin-bottom: 20px;
+  position: relative; /* Untuk memastikan hasil pencarian tetap dalam konteks */
+}
+
+.pencarian-berita-beranda .container-cari {
+  display: flex;
+  position: relative;
+  z-index: 10;
 }
 
 .pencarian-berita-beranda .cari-input {
   width: 310px;
   padding: 11px 10px;
-  margin-left: 55%;
   border-radius: 0;
   border: 1.5px solid #113f67;
 }
@@ -150,23 +158,71 @@ header #login-btn:active,
   padding: 10px 10px;
 }
 
+.cari-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -3px; /* Hilangkan celah antar tombol dan input */
+}
+
 .cari-btn img {
   width: 40px;
   border: 1px solid #113f67;
   background-color: #113f67;
   padding: 9px;
-  margin-left: 130px;
+  cursor: pointer;
 }
 
 .cari-btn img:hover {
   background-color: #005792;
-  cursor: pointer;
 }
 
 .cari-btn img:active {
   background-color: #113f67;
-  cursor: pointer;
 }
+
+/* Gaya untuk hasil pencarian */
+.hasil-pencarian {
+  position: absolute;
+  top: calc(100% + 5px); /* Tepat di bawah input pencarian */
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  max-width: 310px;
+  width: 100%;
+  max-height: 300px; /* Batasi tinggi hasil pencarian */
+  overflow-y: auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.result-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-item a {
+  text-decoration: none;
+  color: #113f67;
+}
+
+.result-item a:hover {
+  text-decoration: underline;
+  color: #005792;
+}
+
+.no-results {
+  padding: 10px;
+  color: #777;
+  font-size: 14px;
+  text-align: center;
+}
+
+
 
 /* Main Style */
 

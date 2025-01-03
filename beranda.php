@@ -179,19 +179,20 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 		</header>
 
 		<main>
-			<div class="judul-dan-cari">
-				<div class="hotline-judul">
-					<h1><b>BERITA</b> UTAMA</h1>
-				</div>
-				<div class="pencarian-berita-beranda">
-					<div class="container-cari">
-						<input type="text" class="cari-input" placeholder="Cari Berita..." />
-					</div>
-					<div class="cari-btn">
-						<img src="gambar/icons8-search-50 (1).png" alt="" />
-					</div>
-				</div>
-			</div>
+        <div class="judul-dan-cari">
+            <div class="hotline-judul">
+                <h1><b>BERITA</b> UTAMA</h1>
+            </div>
+            <div class="pencarian-berita-beranda">
+                <div class="container-cari">
+                    <input type="text" id="searchInput" class="cari-input" placeholder="Cari Berita..." />
+                    <div class="cari-btn">
+                        <img src="gambar/icons8-search-50 (1).png" alt="Cari">
+                    </div>
+                    <div class="hasil-pencarian" id="searchResults"></div>
+                </div>
+            </div>
+        </div>
 			<div class="konten">
 				<div class="konten-1">
 					<?php if ($konten1ArticleBeranda): ?>
@@ -624,5 +625,6 @@ $trendingInternasional = getTrendingArticles($conn, 'Internasional');
 		</footer>
 		<script src="nav-mobile.js"></script>
 		<script src="semua-berita-btn.js"></script>
+		<script src="live_search.js"></script>
 	</body>
 </html>
