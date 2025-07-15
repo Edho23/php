@@ -205,6 +205,10 @@
   .penjelasan-konten {
     margin-top: 15px;
   }
+
+  .penjelasan-konten p a {
+    text-decoration: none;
+  }
   
   .penjelasan-konten {
     cursor: pointer;
@@ -218,6 +222,7 @@
   .penjelasan-konten p b {
     color: black;
   }
+
   
   .penjelasan-konten p b:hover {
     text-decoration: underline;

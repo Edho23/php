@@ -7,7 +7,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 
-$stmt = $conn->prepare("SELECT id, judul, penulis FROM articles ORDER BY tanggal DESC");
+$stmt = $conn->prepare("
+SELECT articles.id, articles.judul, users.username, articles.tanggal 
+FROM articles 
+JOIN users ON articles.author_id = users.id 
+ORDER BY articles.tanggal DESC
+
+");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -95,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <select id="article-id" name="article_id" required>
           <?php foreach ($articles as $articleItem): ?>
             <option value="<?= $articleItem['id']; ?>">
-              <?= htmlspecialchars($articleItem['judul']) . " (Penulis: " . htmlspecialchars($articleItem['penulis']) . ")"; ?>
+              <?= htmlspecialchars($articleItem['judul']) . " (Penulis: " . htmlspecialchars($articleItem['username']) . ")"; ?>
             </option>
           <?php endforeach; ?>
         </select>

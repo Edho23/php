@@ -26,7 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id'])) {
 }
 
 
-$stmt = $conn->prepare("SELECT id, judul, tanggal, views, likes, penulis FROM articles ORDER BY tanggal DESC");
+$stmt = $conn->prepare("
+    SELECT articles.id, articles.judul, articles.tanggal, articles.views, articles.likes, users.username 
+    FROM articles 
+    JOIN users ON articles.author_id = users.id 
+    ORDER BY articles.tanggal DESC
+");
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -80,7 +85,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tr>
                     <td><?= $index + 1; ?></td>
                     <td><?= htmlspecialchars($article['judul']); ?></td>
-                    <td><?= htmlspecialchars($article['penulis']); ?></td>
+                    <td><?= htmlspecialchars($article['username']); ?></td>
                     <td><?= htmlspecialchars($article['tanggal'] ?? 'Tidak tersedia'); ?></td>
                     <td><?= htmlspecialchars($article['views'] ?? 0); ?></td>
                     <td><?= htmlspecialchars($article['likes'] ?? 0); ?></td>
