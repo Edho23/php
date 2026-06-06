@@ -1,0 +1,65 @@
+====================================================
+LAPORAN AUDIT KEAMANAN SERVER
+Universitas 17 Agustus 1945 Surabaya
+====================================================
+Tanggal Investigasi : 06 Juni 2026
+Investigator        : user
+Direktori Kerja     : ~/audit
+
+----------------------------------------------------
+1. RINGKASAN TEMUAN
+----------------------------------------------------
+- Log sistem (Log_Sistem.txt) menunjukkan aktivitas
+  kernel normal, berjalan di Linux 7.0.0-15-generic
+  di atas VirtualBox/KVM.
+
+- Log autentikasi (Log_auth.txt) mencatat kegagalan
+  aktivasi service org.bluez via dbus (timeout).
+
+- Scan malware (scan_malware.txt) menggunakan
+  Rootkit Hunter v1.4.6 - semua file sistem OK,
+  tidak ditemukan rootkit atau file mencurigakan.
+
+- Proses berat (proses_berat.txt):
+  * PID 4601 - user - ptyxis (9.1% CPU)
+  * PID 3127 - user - gnome-shell (2.3% CPU)
+  * PID 179042 - user - nautilus (1.3% CPU)
+
+- Pengguna aktif (PENGGUNA_AKTIF.txt):
+  * user login via tty2 sejak 03:17, idle 38 menit
+
+- Riwayat login (Riwayat_Login.txt):
+  * Login berhasil: Sabtu 06 Juni, Senin 18 Mei,
+    Jumat 15 Mei (2x)
+  * Percobaan sudo grep pada auth.log tercatat
+
+----------------------------------------------------
+2. ANALISIS
+----------------------------------------------------
+- Tidak ditemukan rootkit atau malware aktif
+- Tidak ada IP asing yang berhasil login
+- Aktivitas sistem dalam batas normal
+- Service Bluetooth (bluez) gagal start - minor
+
+----------------------------------------------------
+3. REKOMENDASI
+----------------------------------------------------
+- Periksa dan perbaiki service bluez jika diperlukan
+- Aktifkan monitoring log berkala (logwatch)
+- Pastikan sistem selalu diperbarui (apt upgrade)
+- Batasi akses SSH hanya dari IP tertentu
+
+----------------------------------------------------
+4. DAFTAR FILE BUKTI
+----------------------------------------------------
+- Log_auth.txt       : Log autentikasi
+- Log_Sistem.txt     : Log kernel/sistem
+- scan_malware.txt   : Hasil scan rkhunter
+- proses_berat.txt   : Proses aktif CPU/RAM
+- PENGGUNA_AKTIF.txt : Pengguna sedang login
+- Riwayat_Login.txt  : Histori login
+
+====================================================
+Laporan ini dibuat sebagai dokumentasi formal
+hasil audit keamanan sistem Linux.
+====================================================
